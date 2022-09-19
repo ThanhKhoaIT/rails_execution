@@ -1,0 +1,27 @@
+%header.p-3.mb-3.border-bottom.bg-white
+  .container
+    .d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
+      = link_to root_path, class: 'd-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none' do
+        = image_tag 'executions/logo.png', size: '30x30'
+      %ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
+        %li= link_to 'Dashboard', root_path, class: 'nav-link px-2 link-secondary'
+        %li= link_to 'Requests', tasks_path, class: 'nav-link px-2 link-dark'
+        %li= link_to 'Approved', tasks_path, class: 'nav-link px-2 link-dark'
+        %li= link_to 'Scheduled', tasks_path, class: 'nav-link px-2 link-dark'
+        %li= link_to 'Completed', tasks_path, class: 'nav-link px-2 link-dark'
+      %form.col-12.col-lg-auto.mb-3.mb-lg-0.me-lg-3{role: "search"}
+        %input.form-control{"aria-label" => "Search", placeholder: "Search...", type: "search"}/
+      .dropdown.text-end
+        %a.d-block.link-dark.text-decoration-none.dropdown-toggle{"aria-expanded" => "false", "data-bs-toggle" => "dropdown", href: "#"}
+          %img.rounded-circle{alt: "mdo", height: "32", src: "https://github.com/mdo.png", width: "32"}/
+        %ul.dropdown-menu.text-small{style: ""}
+          %li
+            %a.dropdown-item{href: "#"} New project...
+          %li
+            %a.dropdown-item{href: "#"} Settings
+          %li
+            %a.dropdown-item{href: "#"} Profile
+          %li
+            %hr.dropdown-divider/
+          %li
+            %a.dropdown-item{href: "#"} Sign out

@@ -1,0 +1,11 @@
+!!!
+%html
+  %head
+    = csrf_meta_tags
+    = favicon_link_tag 'executions/favicon.png'
+    = stylesheet_link_tag 'executions/base'
+    = javascript_include_tag 'executions/base'
+
+  %body.bg-light
+    = render partial: 'rails_execution/shared/header'
+    %main.container= yield

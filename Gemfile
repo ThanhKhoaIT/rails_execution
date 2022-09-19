@@ -1,8 +1,7 @@
 # frozen_string_literal: true
 
-source "https://rubygems.org"
-
-# Specify your gem's dependencies in rails_execution.gemspec
+source 'https://rubygems.org'
 gemspec
 
-gem "rake", "~> 13.0"
+gem 'rake', '~> 13.0'
+gem 'haml', '~> 5.2.2'

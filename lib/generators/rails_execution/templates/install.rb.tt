@@ -1,0 +1,47 @@
+class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version %>
+
+  def change
+    create_table :rails_execution_tasks, force: true do |t|
+      t.timestamps null: false
+      t.column :title, :string, null: false
+      t.column :status, :string, null: false
+      t.column :description, :text
+      t.column :script, :text
+      t.column :owner_id, :integer
+      t.column :owner_type, :string
+    end
+    add_index :rails_execution_tasks, :status
+    add_index :rails_execution_tasks, [:owner_id, :owner_type], name: :owner_index
+
+    create_table :rails_execution_comments, force: true do |t|
+      t.timestamps null: false
+      t.column :task_id, :integer, null: false
+      t.column :content, :text, null: false
+      t.column :owner_id, :integer
+      t.column :owner_type, :string
+    end
+    add_index :rails_execution_comments, :task_id
+    add_index :rails_execution_comments, [:owner_id, :owner_type], name: :owner_index
+
+    create_table :rails_execution_activities, force: true do |t|
+      t.timestamps null: false
+      t.column :task_id, :integer, null: false
+      t.column :message, :text, null: false
+      t.column :owner_id, :integer
+      t.column :owner_type, :string
+    end
+    add_index :rails_execution_activities, :task_id
+    add_index :rails_execution_activities, [:owner_id, :owner_type], name: :owner_index
+
+    create_table :rails_execution_task_reviews, force: true do |t|
+      t.timestamps null: false
+      t.column :task_id, :integer, null: false
+      t.column :status, :text, null: false
+      t.column :owner_id, :integer
+      t.column :owner_type, :string
+    end
+    add_index :rails_execution_task_reviews, :task_id
+    add_index :rails_execution_task_reviews, [:owner_id, :owner_type], name: :owner_index
+  end
+
+end

@@ -1,0 +1,28 @@
+RailsExecution.configuration do |config|
+
+  # Owner display
+  config.owner_method = :current_user
+  config.owner_name_method = :fullname
+  # config.owner_avatar = lambda do |owner|
+  #   owner.avatar.url(:medium)
+  # end
+
+  # Accessible check: Default is TRUE
+  # config.task_viewable
+  # config.task_editable
+  # config.task_approvable
+  # config.task_closable
+  # config.task_commentable = lambda do |task, user|
+  #   YourPolicy.new(user, task).add_comment?
+  # end
+
+  # Advanced
+  # config.file_upload = true
+  # config.file_types = DEFAULT_FILE_TYPES.values
+  # config.file_uploader = RailsExecution::File::Uploader
+  # config.file_reader = RailsExecution::File::Reader
+
+  # Paging
+  # config.per_page = 30 # Default: 20
+
+end
