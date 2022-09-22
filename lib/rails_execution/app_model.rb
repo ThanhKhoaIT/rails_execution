@@ -8,4 +8,7 @@ class RailsExecution::AppModel < model_klass
 
   belongs_to :owner, polymorphic: true
 
+  scope :descending, -> { order(id: :desc) }
+  scope :ascending, -> { order(id: :asc) }
+
 end

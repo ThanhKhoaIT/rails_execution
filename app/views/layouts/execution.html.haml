@@ -1,6 +1,8 @@
 !!!
 %html
   %head
+    %title Rails Execution
+    %meta{ name: :viewport, content: 'width=device-width, initial-scale=1' }
     = csrf_meta_tags
     = favicon_link_tag 'executions/favicon.png'
     = stylesheet_link_tag 'executions/base'
@@ -8,4 +10,6 @@
 
   %body.bg-light.fw-light
     = render partial: 'rails_execution/shared/header'
-    %main.container= yield
+    %main.container
+      = render partial: 'rails_execution/shared/flash'
+      = yield

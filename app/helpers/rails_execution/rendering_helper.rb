@@ -24,6 +24,21 @@ module RailsExecution
       content_tag :span, owner.public_send(RailsExecution.configuration.owner_name_method)
     end
 
+    def render_notification_message(mode, message)
+      case mode
+      when 'alert'
+        content_tag :div, class: 'alert alert-success align-items-center' do
+          concat content_tag(:i, nil, class: 'bi bi-check-circle')
+          concat content_tag(:span, message, class: 'ms-2')
+        end
+      when 'notice'
+        content_tag :div, class: 'alert alert-success align-items-center' do
+          concat content_tag(:i, nil, class: 'bi bi-check-circle mr-2')
+          concat content_tag(:span, message, class: 'ms-2')
+        end
+      end
+    end
+
     def task_reviewed_status(task)
       @task_reviewed_status ||= {}
       @task_reviewed_status[task] ||= task.task_reviews.find_by(owner_id: current_owner&.id)&.status&.inquiry

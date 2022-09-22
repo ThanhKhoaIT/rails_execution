@@ -1,0 +1,7 @@
+#flash-messages
+  - flash.each do |key, message|
+    = render_notification_message(key, message)
+:javascript
+  setTimeout(function() {
+    $('#flash-messages .alert').slideUp();
+  }, 3000);

@@ -8,6 +8,7 @@ require 'rails_execution/engine'
 require 'rails_execution/paging'
 require 'rails_execution/files/uploader'
 require 'rails_execution/files/reader'
+require 'rails_execution/services/approvement'
 
 module RailsExecution
 

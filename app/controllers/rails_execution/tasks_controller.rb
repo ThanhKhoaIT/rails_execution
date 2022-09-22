@@ -5,7 +5,7 @@ module RailsExecution
 
     def index
       paging = ::RailsExecution::Paging.new(page: params[:page], per_page: params[:per_page])
-      @tasks = paging.call(RailsExecution::Task.processing)
+      @tasks = paging.call(RailsExecution::Task.processing.descending)
     end
 
     def new
@@ -60,16 +60,20 @@ module RailsExecution
     end
 
     def reject
-      review = current_task.task_reviews.find_or_initialize_by(owner_id: current_owner.id)
-      review.update!(status: :rejected)
-      flash[:notice] = 'Your decision is updated!'
+      if ::RailsExecution::Services::Approvement.new(current_task, reviewer: current_owner).reject
+        flash[:notice] = 'Your decision is updated!'
+      else
+        flash[:error] = "Your decision is can't update!"
+      end
       redirect_to action: :show
     end
 
     def approve
-      review = current_task.task_reviews.find_or_initialize_by(owner_id: current_owner.id)
-      review.update!(status: :approved)
-      flash[:notice] = 'Your decision is updated!'
+      if ::RailsExecution::Services::Approvement.new(current_task, reviewer: current_owner).approve
+        flash[:notice] = 'Your decision is updated!'
+      else
+        flash[:error] = "Your decision is can't update!"
+      end
       redirect_to action: :show
     end
 
@@ -86,6 +90,11 @@ module RailsExecution
       @current_task ||= RailsExecution::Task.find(params[:id])
     end
     helper_method :current_task
+
+    def reviewers
+      @reviewers ||= current_task.task_reviews.where.not(owner_id: current_owner&.id)
+    end
+    helper_method :reviewers
 
   end
 end
