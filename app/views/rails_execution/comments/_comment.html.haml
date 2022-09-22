@@ -1,0 +1,22 @@
+- comment_key = comment.cache_key.parameterize(separator: '_').remove('-')
+
+.media.media-comment.d-flex{ id: comment_key }
+  = render_owner_avatar(comment.owner, size: '50x50')
+  .media-body.rounded.shadow-sm.g-bg-secondary.g-pa-15.w-100
+    = link_to '#edit-comment', class: 'edit-comment' do
+      %i.bi.bi-gear.fs-5.text-dark
+    .review-comment-content
+      .g-mb-15.mb-2
+        %h6.g-color-gray-dark-v1.mb-0= render_owner_name(comment.owner)
+        %span.g-color-gray-dark-v4.g-font-size-12= comment.created_at.strftime('%Y/%m/%d %H:%M')
+      %p.content-markdown= comment.content
+      %p.content-html
+    .edit-comment-form.hidden
+      = form_for comment, url: task_comment_path(current_task, comment, comment_key: comment_key), remote: true do |f|
+        = f.text_area :content, { id: "#{comment_key}_content" }
+        .mt-3.text-end
+          %a.btn.btn-outline-default.text-danger.cancel-edit-mode{ href: '#cancel-edit-form' } Cancel
+          = f.submit 'Update', class: 'btn btn-outline-success'
+
+  :javascript
+    window.comments.renderMarkdown("##{comment_key}");

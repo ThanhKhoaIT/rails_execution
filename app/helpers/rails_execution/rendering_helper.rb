@@ -59,10 +59,12 @@ module RailsExecution
 
     def status_to_color(text)
       {
+        bad: 'danger',
+        good: 'success',
         rejected: 'danger',
         approved: 'success',
         reviewing: 'secondary',
-      }[text]
+      }[text] || 'secondary'
     end
 
   end

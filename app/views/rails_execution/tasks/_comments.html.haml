@@ -1,0 +1,19 @@
+= re_card_content do
+  = form_for new_comment || current_task.comments.new, url: task_comments_path(current_task) do |f|
+    = f.text_area :content, { rows: 3 }
+    .mt-3.text-end= f.submit 'Comment', class: 'btn btn-outline-success'
+
+= render current_task.comments.ascending
+
+:javascript
+  hljs.highlightAll();
+  window.comments.initAddNewComment('comment_content');
+
+  $(document).on('click', '.media-comment a.edit-comment', function() {
+    window.comments.clickEditComment(this);
+    return false;
+  });
+  $(document).on('click', '.media-comment a.cancel-edit-mode', function() {
+    window.comments.cancelEditMode(this);
+    return false;
+  });

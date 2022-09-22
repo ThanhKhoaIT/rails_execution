@@ -1,0 +1,11 @@
+= re_card_content do
+  %h5.section-title Activities
+  %ul.list-unstyled
+    - current_task.activities.descending.each do |activitiy|
+      %li.row
+        .col
+          = render_user_info(activitiy.owner, avatar_size: '20x20')
+          %p.small.mt-1= activitiy.message
+        .col-4.text-end
+          %small= activitiy.created_at.strftime('%Y/%m/%d')
+          %p= activitiy.created_at.strftime('%H:%M')

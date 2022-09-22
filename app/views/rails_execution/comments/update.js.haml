@@ -1,0 +1,2 @@
+$("##{params[:comment_key]}").replaceWith("#{j render(partial: 'comment', locals: { comment: @comment })}");
+hljs.highlightAll();

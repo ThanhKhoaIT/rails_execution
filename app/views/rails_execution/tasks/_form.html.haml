@@ -25,16 +25,4 @@
     %hr
     = f.submit (task.new_record? ? 'Create' : 'Update'), class: 'btn btn-success'
 
-:javascript
-  $('#task_task_review_ids').select2({});
-  new EasyMDE({
-    element: document.getElementById('task_description'),
-    status: false,
-  });
-  var editor = ace.edit("script-editor", { printMarginColumn: false, setPadding: 10 });
-  var RubyMode = ace.require("ace/mode/ruby").Mode;
-  editor.setTheme("ace/theme/solarized_dark");
-  editor.session.setMode(new RubyMode());
-  editor.getSession().on("change", function () {
-    $("#main-script").val(editor.getValue());
-  })
+= render partial: 'form_scripts'

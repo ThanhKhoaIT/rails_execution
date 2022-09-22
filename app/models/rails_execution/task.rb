@@ -3,6 +3,7 @@ class RailsExecution::Task < RailsExecution::AppModel
   PROCESSING_STATUSES = %w(created reviewing approved)
 
   has_many :activities, class_name: 'RailsExecution::Activity'
+  has_many :comments, class_name: 'RailsExecution::Comment'
   has_many :task_reviews, class_name: 'RailsExecution::TaskReview'
   attr_accessor :reviewer_ids
 
@@ -17,6 +18,11 @@ class RailsExecution::Task < RailsExecution::AppModel
     completed: 'completed',
     closed: 'closed',
   }, _prefix: :is
+
+  enum syntax_status: {
+    bad: 'bad',
+    good: 'good',
+  }, _prefix: true
 
   scope :processing, -> { where(status: PROCESSING_STATUSES) }
 

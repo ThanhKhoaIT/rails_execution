@@ -9,11 +9,12 @@ require 'rails_execution/paging'
 require 'rails_execution/files/uploader'
 require 'rails_execution/files/reader'
 require 'rails_execution/services/approvement'
+require 'rails_execution/services/syntax_checker'
 
 module RailsExecution
 
   def self.configuration
-    @configuration ||= RailsExecution::Config.new
+    @configuration ||= ::RailsExecution::Config.new
     yield @configuration if block_given?
     @configuration
   end

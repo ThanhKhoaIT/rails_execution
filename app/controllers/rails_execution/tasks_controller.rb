@@ -22,6 +22,7 @@ module RailsExecution
         script: params.dig(:task, :script),
       })
       @task.assign_reviewers(params.dig(:task, :task_review_ids).to_a)
+      @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(@task.script).call ? 'good' : 'bad'
 
       if @task.save
         flash[:notice] = 'Create the request is successful!'
@@ -51,6 +52,7 @@ module RailsExecution
       update_data[:script] = params.dig(:task, :script) if @task.script_editable?
       update_data[:status] = :reviewing if @task.is_approved?
       @task.assign_reviewers(params.dig(:task, :task_review_ids).to_a)
+      @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(update_data[:script]).call ? 'good' : 'bad'
 
       if @task.update(update_data)
         redirect_to action: :show
@@ -63,7 +65,7 @@ module RailsExecution
       if ::RailsExecution::Services::Approvement.new(current_task, reviewer: current_owner).reject
         flash[:notice] = 'Your decision is updated!'
       else
-        flash[:error] = "Your decision is can't update!"
+        flash[:alert] = "Your decision is can't update!"
       end
       redirect_to action: :show
     end
@@ -72,7 +74,7 @@ module RailsExecution
       if ::RailsExecution::Services::Approvement.new(current_task, reviewer: current_owner).approve
         flash[:notice] = 'Your decision is updated!'
       else
-        flash[:error] = "Your decision is can't update!"
+        flash[:alert] = "Your decision is can't update!"
       end
       redirect_to action: :show
     end
@@ -91,10 +93,10 @@ module RailsExecution
     end
     helper_method :current_task
 
-    def reviewers
-      @reviewers ||= current_task.task_reviews.where.not(owner_id: current_owner&.id)
+    def reviewing_accounts
+      @reviewing_accounts ||= current_task.task_reviews.where.not(owner_id: current_owner&.id)
     end
-    helper_method :reviewers
+    helper_method :reviewing_accounts
 
   end
 end

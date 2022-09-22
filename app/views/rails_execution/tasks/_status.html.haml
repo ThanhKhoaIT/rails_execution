@@ -1,0 +1,10 @@
+= re_card_content do
+  %h5.section-title Status
+  %ul.list-unstyled.mt-3
+    %li.mt-2
+      .row
+        .col
+          .user-info
+            = image_tag 'executions/robot.png', size: '20x20', class: 'bd-placeholder-img flex-shrink-0 me-2 rounded'
+            %span Syntax Checker
+        .col-3.text-end= re_badge_color(current_task.syntax_status)

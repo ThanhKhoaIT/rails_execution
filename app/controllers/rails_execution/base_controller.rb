@@ -5,9 +5,9 @@ module RailsExecution
 
     clear_helpers
 
+    include RailsExecution::BaseHelper
     helper RailsExecution::RenderingHelper
     helper RailsExecution::PolicyHelper
-    include RailsExecution::PolicyHelper
 
     layout 'execution'
 

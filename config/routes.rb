@@ -8,5 +8,7 @@ RailsExecution::Engine.routes.draw do
       patch :reject
       patch :approve
     end
+
+    resources :comments, only: [:create, :update, :destroy]
   end
 end

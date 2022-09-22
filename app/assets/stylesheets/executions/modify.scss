@@ -130,3 +130,28 @@
 small, .small {
   font-size: 10px !important;
 }
+
+.media-comment {
+  position: relative;
+
+  a.edit-comment {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+  }
+
+  &.editing {
+    .edit-comment-form {
+      display: block !important;
+    }
+    .review-comment-content {
+      display: none !important;
+    }
+  }
+}
+
+.editor-toolbar {
+  button {
+    color: #808080;
+  }
+}

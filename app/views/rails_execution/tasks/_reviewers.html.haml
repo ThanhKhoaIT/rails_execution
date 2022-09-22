@@ -1,0 +1,12 @@
+- if display_reviewers?(current_task)
+  = re_card_content do
+    %h5.section-title Reviewers
+    %ul.list-unstyled.mt-3
+      - if reviewing_accounts.empty?
+        %li.mt-2.small.text-muted.text-center Nobody!
+      - else
+        - reviewing_accounts.each do |task_review|
+          %li.mt-2
+            .row
+              .col= render_user_info(task_review.owner, avatar_size: '20x20')
+              .col-3.text-end= re_badge_color(task_review.status)

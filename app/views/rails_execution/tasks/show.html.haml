@@ -5,8 +5,11 @@
         = current_task.title
         %span.float-end.fs-5.text-muted ##{current_task.id}
       %p.mt-3.description
-        #description-html
-        #description-markdown= current_task.description
+        - if current_task.description.present?
+          #description-markdown= current_task.description
+          #description-html
+        - else
+          %p.text-muted.text-center No description
 
     = re_card_content do
       %h5.section-title.mb-3 Script
@@ -15,8 +18,7 @@
         #script-editor.collapsed= current_task.script
         = link_to '＋ Click to detail', '#detail', class: 'btn', id: 'click2detail'
 
-    = re_card_content do
-      %h5.section-title.mb-3 Comments
+    = render partial: 'rails_execution/tasks/comments', locals: { new_comment: @new_comment }
 
   .col-md-4
     - if display_owner?(current_task.owner)
@@ -37,55 +39,8 @@
             - unless task_reviewed_status(current_task)&.approved?
               = link_to 'Approve', approve_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-success'
 
-    - if display_reviewers?(current_task)
-      = re_card_content do
-        %h5.section-title Reviewers
-        %ul.list-unstyled.mt-3
-          - if reviewers.empty?
-            %li.mt-2.small.text-muted.text-center Nobody!
-          - else
-            - reviewers.each do |task_review|
-              %li.mt-2
-                .row
-                  .col= render_user_info(task_review.owner, avatar_size: '20x20')
-                  .col-3.text-end= re_badge_color(task_review.status)
+    = render partial: 'status'
+    = render partial: 'reviewers'
+    = render partial: 'activities'
 
-    = re_card_content do
-      %h5.section-title Activities
-      %ul.list-unstyled
-        - current_task.activities.descending.each do |activitiy|
-          %li.row
-            .col
-              = render_user_info(activitiy.owner, avatar_size: '20x20')
-              %p.small.mt-1= activitiy.message
-            .col-4.text-end
-              %small= activitiy.created_at.strftime('%Y/%m/%d')
-              %p= activitiy.created_at.strftime('%H:%M')
-
-:javascript
-  window.editor = ace.edit("script-editor", {
-    wrap: true,
-    readOnly: true,
-    printMarginColumn: false,
-  });
-  var RubyMode = ace.require("ace/mode/ruby").Mode;
-  editor.setTheme("ace/theme/solarized_dark");
-  editor.session.setMode(new RubyMode());
-
-  $('#description-html').html(marked.parse($('#description-markdown').html()));
-  $('#click2detail').click(function() {
-    this.remove();
-    $('#script-editor').removeClass('collapsed');
-    window.editor.resize();
-    return false;
-  })
-  $('#click2full').click(function() {
-    $('#task-detail').toggleClass('fullscreen');
-    if ($('#task-detail').hasClass('fullscreen')) {
-      $(this).html('Normal Display');
-    } else {
-      $(this).html('Full Screen');
-    }
-    window.editor.resize();
-    return false;
-  })
+= render partial: 'show_scripts'

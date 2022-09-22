@@ -5,6 +5,7 @@ class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version
       t.timestamps null: false
       t.column :title, :string, null: false
       t.column :status, :string, null: false
+      t.column :syntax_status, :string, default: 'bad'
       t.column :description, :text
       t.column :script, :text
       t.column :owner_id, :integer
