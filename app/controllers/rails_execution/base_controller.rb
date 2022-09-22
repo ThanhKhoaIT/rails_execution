@@ -3,9 +3,13 @@
 module RailsExecution
   class BaseController < ::ApplicationController
 
-    layout 'execution'
-
     clear_helpers
+
+    helper RailsExecution::RenderingHelper
+    helper RailsExecution::PolicyHelper
+    include RailsExecution::PolicyHelper
+
+    layout 'execution'
 
   end
 end

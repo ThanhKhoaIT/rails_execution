@@ -9,19 +9,5 @@
         %li= link_to 'Approved', tasks_path, class: 'nav-link px-2 link-dark'
         %li= link_to 'Scheduled', tasks_path, class: 'nav-link px-2 link-dark'
         %li= link_to 'Completed', tasks_path, class: 'nav-link px-2 link-dark'
-      %form.col-12.col-lg-auto.mb-3.mb-lg-0.me-lg-3{role: "search"}
-        %input.form-control{"aria-label" => "Search", placeholder: "Search...", type: "search"}/
-      .dropdown.text-end
-        %a.d-block.link-dark.text-decoration-none.dropdown-toggle{"aria-expanded" => "false", "data-bs-toggle" => "dropdown", href: "#"}
-          %img.rounded-circle{alt: "mdo", height: "32", src: "https://github.com/mdo.png", width: "32"}/
-        %ul.dropdown-menu.text-small{style: ""}
-          %li
-            %a.dropdown-item{href: "#"} New project...
-          %li
-            %a.dropdown-item{href: "#"} Settings
-          %li
-            %a.dropdown-item{href: "#"} Profile
-          %li
-            %hr.dropdown-divider/
-          %li
-            %a.dropdown-item{href: "#"} Sign out
+      .col-md-3.text-end
+        = link_to 'Add', new_task_path, class: 'btn btn-primary me-2'

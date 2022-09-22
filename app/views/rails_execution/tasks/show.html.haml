@@ -1,0 +1,68 @@
+.row
+  .col-md-8
+    = re_card_content do
+      %h6.border-bottom.pb-2.mb-0= current_task.title
+      %p.mt-3.description
+        #description-html
+        #description-markdown= current_task.description
+
+    = re_card_content do
+      #task-detail
+        = link_to 'Full Screen', '#full-screen', class: 'btn', id: 'click2full'
+        #script-editor.collapsed= current_task.script
+        = link_to '＋ Click to detail', '#detail', class: 'btn', id: 'click2detail'
+
+  .col-md-4
+    - if display_owner?(current_task.owner)
+      = re_card_content do
+        %h5.section-title.mb-3 Requestor
+        = render_user_info(current_task.owner, avatar_size: '40x40')
+
+    - if display_decide?(current_task)
+      = re_card_content do
+        %h5.section-title
+          What is your decision?
+          .float-end= re_badge_color(task_reviewed_status(current_task))
+        .row.mt-3
+          .col= render_user_info(current_owner, avatar_size: '20x20')
+          .col-6.text-end
+            - unless task_reviewed_status(current_task).rejected?
+              = link_to 'Reject', reject_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger'
+            - unless task_reviewed_status(current_task).approved?
+              = link_to 'Approve', approve_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-success'
+
+    - if display_reviewers?(current_task)
+      = re_card_content do
+        %h5.section-title Reviewers
+        %ul.list-unstyled.mt-3
+          - current_task.task_reviews.each do |task_review|
+            - next if task_review.owner_id == current_owner&.id
+            %li.mt-2
+              .row
+                .col= render_user_info(task_review.owner, avatar_size: '20x20')
+                .col-3.text-end= re_badge_color(task_review.status)
+
+-# hljs.highlightAll();
+:javascript
+  window.editor = ace.edit("script-editor", { readOnly: true, printMarginColumn: false });
+  var RubyMode = ace.require("ace/mode/ruby").Mode;
+  editor.setTheme("ace/theme/solarized_dark");
+  editor.session.setMode(new RubyMode());
+
+  $('#description-html').html(marked.parse($('#description-markdown').html()));
+  $('#click2detail').click(function() {
+    this.remove();
+    $('#script-editor').removeClass('collapsed');
+    window.editor.resize();
+    return false;
+  })
+  $('#click2full').click(function() {
+    $('#task-detail').toggleClass('fullscreen');
+    if ($('#task-detail').hasClass('fullscreen')) {
+      $(this).html('Normal Display');
+    } else {
+      $(this).html('Full Screen');
+    }
+    window.editor.resize();
+    return false;
+  })

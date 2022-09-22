@@ -1,8 +1,8 @@
 .d-flex.text-muted.pt-3
   = render_owner_avatar(task.owner)
-  = image_tag 'executions/logo.png', size: '32x32', class: 'bd-placeholder-img flex-shrink-0 me-2 rounded'
-  .pb-3.mb-0.small.lh-sm.border-bottom.w-100
-    .d-flex.justify-content-between
-      %strong.text-gray-dark Full Name
-      %a{href: "#"} Follow
-    %span.d-block @username
+  = link_to task_path(task) do
+    .pb-3.mb-0.small.lh-sm.border-bottom.w-100
+      .d-flex.justify-content-between
+        %strong.text-gray-dark= task.title
+        %p.mb-0.text-muted= task.description.truncate(100)
+      %span.d-block= task.description.truncate(100)

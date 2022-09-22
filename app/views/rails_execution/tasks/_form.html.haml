@@ -1,0 +1,40 @@
+= form_for task do |f|
+  .row
+    - if task.errors.any?
+      .col-12.text-danger.small.mt-3= task.errors.full_messages.join("\n")
+
+    .col
+      .mb-3.mt-4= f.text_field :title, { class: 'form-control', placeholder: 'Title', required: true }
+      .mb-3.mt-4= f.text_area :description, { class: 'form-control', placeholder: 'Description', rows: 10 }
+
+    - if RailsExecution.configuration.reviewers.present?
+      .col-4
+        %p.text-bold.mb-0.mt-1.section-title Reviewers:
+        #reviewers.mb-3
+          - if reviewers.any?
+            = f.collection_select :task_review_ids, reviewers, :id, :name, { selected: task.reviewer_ids }, { multiple: true, class: 'select2 col-12' }
+          - else
+            %p.small.text-muted Nobody
+
+    .col-md-12.mb-3.mt-3
+      = f.label :script, { class: 'form-label' }
+      = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
+      #script-editor= task.script
+
+  .mb-3.mt-3.text-end
+    %hr
+    = f.submit (task.new_record? ? 'Create' : 'Update'), class: 'btn btn-success'
+
+:javascript
+  $('#task_task_review_ids').select2({});
+  new EasyMDE({
+    element: document.getElementById('task_description'),
+    status: false,
+  });
+  var editor = ace.edit("script-editor", { printMarginColumn: false, setPadding: 10 });
+  var RubyMode = ace.require("ace/mode/ruby").Mode;
+  editor.setTheme("ace/theme/solarized_dark");
+  editor.session.setMode(new RubyMode());
+  editor.getSession().on("change", function () {
+    $("#main-script").val(editor.getValue());
+  })

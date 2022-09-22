@@ -1,10 +1,16 @@
 RailsExecution.configuration do |config|
 
   # Owner display
+  # config.owner_model = 'User'
   config.owner_method = :current_user
   config.owner_name_method = :fullname
   # config.owner_avatar = lambda do |owner|
   #   owner.avatar.url(:medium)
+  # end
+
+  # Task control
+  # config.reviewers = lambda do
+  #   [{ name: '', id: '' }]
   # end
 
   # Accessible check: Default is TRUE
