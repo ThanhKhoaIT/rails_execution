@@ -22,10 +22,9 @@ module RailsExecution
     attr_accessor :reviewers # lambda
 
     # Accessible check
-    attr_accessor :task_viewable # lambda
-    attr_accessor :task_creatable # lambda
     attr_accessor :task_editable # lambda
     attr_accessor :task_closable # lambda
+    attr_accessor :task_creatable # lambda
     attr_accessor :task_approvable # lambda
     attr_accessor :task_executable # lambda
 
@@ -42,13 +41,19 @@ module RailsExecution
       self.owner_model = defined?(::User) ? 'User' : nil
       self.owner_method = :current_user
       self.owner_name_method = :name
-      self.owner_avatar = nil
+      self.owner_avatar = ->(_) { nil }
       self.file_upload = false
       self.file_types = DEFAULT_FILE_TYPES.values
-      self.file_uploader = RailsExecution::Files::Uploader
-      self.file_reader = RailsExecution::Files::Reader
+      self.file_uploader = ::RailsExecution::Files::Uploader
+      self.file_reader = ::RailsExecution::Files::Reader
       self.per_page = DEFAULT_PER_PAGE
-      self.reviewers = nil
+      self.reviewers = -> { [] }
+
+      self.task_creatable = -> (_user) { true }
+      self.task_editable = -> (_user, _task) { true }
+      self.task_closable = -> (_user, _task) { true }
+      self.task_approvable = -> (_user, _task) { true }
+      self.task_executable = -> (_user, _task) { true }
     end
 
   end

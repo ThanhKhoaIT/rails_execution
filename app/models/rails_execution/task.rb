@@ -67,7 +67,10 @@ class RailsExecution::Task < RailsExecution::AppModel
   def re_assign_status
     return if self.is_completed? || self.is_closed?
 
-    self.status = :reviewing if self.is_approved? && self.script_changed?
+    if self.is_approved? && self.script_changed?
+      self.status = :reviewing
+      self.task_reviews.update_all(status: :reviewing)
+    end
   end
 
 end

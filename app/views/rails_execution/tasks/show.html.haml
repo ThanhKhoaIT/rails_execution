@@ -1,10 +1,11 @@
 = re_page_actions do
   - if can_close_task?(current_task)
     = link_to 'Close', task_path(current_task), class: 'btn btn-outline-danger', method: :delete, data: { confirm: 'Are you sure?' }
-  - elsif current_task.is_closed?
+  - elsif current_task.is_closed? && can_create_task?
     = link_to 'Re-Open', reopen_task_path(current_task), class: 'btn btn-outline-info', method: :patch, data: { confirm: 'Are you sure?' }
 
-  = link_to 'Edit', edit_task_path(current_task), class: 'btn btn-outline-warning me-2'
+  - if can_edit_task?(current_task)
+    = link_to 'Edit', edit_task_path(current_task), class: 'btn btn-outline-warning me-2'
 
 .row
   .col-md-8

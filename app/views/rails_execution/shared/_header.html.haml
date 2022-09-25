@@ -10,4 +10,4 @@
         %li= link_to 'Closed', closed_tasks_path, class: "nav-link px-2 link-#{ current_page?(closed_tasks_path) ? 'secondary' : 'dark' }"
       .col-md-3.text-end
         = yield :page_actions
-        = link_to 'New Task', new_task_path, class: 'btn btn-outline-primary ms-2'
+        = link_to 'New Task', new_task_path, class: 'btn btn-outline-primary ms-2', disabled: !can_create_task?

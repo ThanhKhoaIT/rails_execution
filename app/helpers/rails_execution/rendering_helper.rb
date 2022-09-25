@@ -11,7 +11,7 @@ module RailsExecution
     def render_owner_avatar(owner, size: '32x32')
       return nil if owner.blank?
 
-      avatar_url = RailsExecution.configuration.owner_avatar&.call(owner)
+      avatar_url = RailsExecution.configuration.owner_avatar.call(owner)
       return nil if avatar_url.blank?
 
       image_tag avatar_url, size: size, class: 'bd-placeholder-img flex-shrink-0 me-2 rounded'

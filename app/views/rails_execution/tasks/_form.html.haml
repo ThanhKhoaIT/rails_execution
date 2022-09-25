@@ -19,7 +19,11 @@
     .col-md-12.mb-3.mt-3
       %h5.section-title Script:
       = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
-      #script-editor= task.script
+      #script-editor-container
+        #script-editor= task.script
+        = link_to '#full-screen', class: 'btn', id: 'click2full' do
+          %i.bi.bi-arrows-fullscreen
+          %i.bi.bi-arrows-angle-contract
 
   .mb-3.mt-3.text-end
     %hr

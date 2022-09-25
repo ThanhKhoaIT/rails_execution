@@ -10,10 +10,14 @@ module RailsExecution
     end
 
     def new
+      raise(::RailsExecution::AccessDeniedError, 'Create task') unless can_create_task?
+
       @task = ::RailsExecution::Task.new
     end
 
     def create
+      raise(::RailsExecution::AccessDeniedError, 'Create task') unless can_create_task?
+
       @task = ::RailsExecution::Task.new({
         status: :created,
         owner_id: current_owner&.id,
@@ -52,10 +56,14 @@ module RailsExecution
     end
 
     def edit
+      raise(::RailsExecution::AccessDeniedError, 'Edit task') unless can_edit_task?(current_task)
+
       @task = current_task
     end
 
     def update
+      raise(::RailsExecution::AccessDeniedError, 'Edit task') unless can_edit_task?(current_task)
+
       @task = current_task
       update_data = {
         title: params.dig(:task, :title),
@@ -133,7 +141,7 @@ module RailsExecution
     private
 
     def reviewers
-      @reviewers ||= ::RailsExecution.configuration.reviewers&.call.to_a.map do |reviewer|
+      @reviewers ||= ::RailsExecution.configuration.reviewers.call.map do |reviewer|
         ::OpenStruct.new(reviewer)
       end
     end

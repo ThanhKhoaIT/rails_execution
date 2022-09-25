@@ -2,4 +2,5 @@
 
 module RailsExecution
   class Error < StandardError; end
+  class AccessDeniedError < Error; end
 end

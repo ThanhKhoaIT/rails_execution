@@ -18,12 +18,20 @@ module RailsExecution
       task.task_reviews.exists?
     end
 
-    def can_execute_task?(task)
-      how_to_executable(task).blank?
+    def can_create_task?
+      ::RailsExecution.configuration.task_creatable.call(current_owner)
+    end
+
+    def can_edit_task?(task)
+      ::RailsExecution.configuration.task_editable.call(current_owner, task)
     end
 
     def can_close_task?(task)
-      task.in_processing?
+      task.in_processing? && ::RailsExecution.configuration.task_closable.call(current_owner, task)
+    end
+
+    def can_execute_task?(task)
+      how_to_executable(task).blank?
     end
 
     def how_to_executable(task)
@@ -32,6 +40,7 @@ module RailsExecution
       return "It's bad Syntax" if task.syntax_status_bad?
       return 'This task is not approved' unless task.is_approved?
       return 'No approval from any reviewer' if task.task_reviews.is_approved.empty?
+      return "Can't executable by app policy" unless ::RailsExecution.configuration.task_executable.call(current_owner, task)
     end
 
   end
