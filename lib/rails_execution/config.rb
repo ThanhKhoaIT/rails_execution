@@ -23,10 +23,11 @@ module RailsExecution
 
     # Accessible check
     attr_accessor :task_viewable # lambda
+    attr_accessor :task_creatable # lambda
     attr_accessor :task_editable # lambda
-    attr_accessor :task_approvable # lambda
     attr_accessor :task_closable # lambda
-    attr_accessor :task_commentable # lambda
+    attr_accessor :task_approvable # lambda
+    attr_accessor :task_executable # lambda
 
     # Advanced
     attr_accessor :file_upload

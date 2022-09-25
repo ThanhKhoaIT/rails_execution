@@ -17,7 +17,7 @@
             %p.small.text-muted Nobody
 
     .col-md-12.mb-3.mt-3
-      = f.label :script, { class: 'form-label' }
+      %h5.section-title Script:
       = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
       #script-editor= task.script
 

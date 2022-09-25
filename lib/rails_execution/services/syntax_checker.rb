@@ -8,6 +8,8 @@ module RailsExecution
       end
 
       def call
+        return false if code.blank?
+
         init_tempfile
         return is_ok?
       end

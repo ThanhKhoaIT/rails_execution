@@ -1,6 +1,6 @@
 class RailsExecution::Task < RailsExecution::AppModel
 
-  PROCESSING_STATUSES = %w(created reviewing approved)
+  PROCESSING_STATUSES = %w(created reviewing approved rejected)
 
   has_many :activities, class_name: 'RailsExecution::Activity'
   has_many :comments, class_name: 'RailsExecution::Comment'
@@ -14,7 +14,7 @@ class RailsExecution::Task < RailsExecution::AppModel
     created: 'created',
     reviewing: 'reviewing',
     approved: 'approved',
-    scheduled: 'scheduled',
+    rejected: 'rejected',
     completed: 'completed',
     closed: 'closed',
   }, _prefix: :is
@@ -26,10 +26,15 @@ class RailsExecution::Task < RailsExecution::AppModel
 
   scope :processing, -> { where(status: PROCESSING_STATUSES) }
 
+  before_update :re_assign_status
   after_commit :create_activity, on: :create, if: :owner
   after_commit :update_activity, on: :update, if: :owner
 
   def script_editable?
+    self.in_processing?
+  end
+
+  def in_processing?
     PROCESSING_STATUSES.include?(self.status)
   end
 
@@ -57,6 +62,12 @@ class RailsExecution::Task < RailsExecution::AppModel
 
   def update_activity
     self.activities.create(owner: self.owner, message: 'Updated the Task')
+  end
+
+  def re_assign_status
+    return if self.is_completed? || self.is_closed?
+
+    self.status = :reviewing if self.is_approved? && self.script_changed?
   end
 
 end

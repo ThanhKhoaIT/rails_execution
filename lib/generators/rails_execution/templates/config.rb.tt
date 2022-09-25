@@ -15,11 +15,12 @@ RailsExecution.configuration do |config|
 
   # Accessible check: Default is TRUE
   # config.task_viewable
+  # config.task_creatable
   # config.task_editable
-  # config.task_approvable
   # config.task_closable
-  # config.task_commentable = lambda do |task, user|
-  #   YourPolicy.new(user, task).add_comment?
+  # config.task_approvable
+  # config.task_executable = lambda do |task, user|
+  #   YourPolicy.new(user, task).executable?
   # end
 
   # Advanced

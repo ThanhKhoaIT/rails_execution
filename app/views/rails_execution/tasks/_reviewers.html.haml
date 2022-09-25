@@ -10,3 +10,14 @@
             .row
               .col= render_user_info(task_review.owner, avatar_size: '20x20')
               .col-3.text-end= re_badge_color(task_review.status)
+
+- if display_decide?(current_task)
+  = re_card_content do
+    %h5.section-title What is your decision?
+    .row.mt-3
+      .col= render_user_info(current_owner, avatar_size: '20x20')
+      .col-6.text-end
+        - unless task_reviewed_status(current_task)&.rejected?
+          = link_to 'Reject', reject_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger'
+        - unless task_reviewed_status(current_task)&.approved?
+          = link_to 'Approve', approve_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-success'

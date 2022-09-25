@@ -1,8 +1,8 @@
 .nav-link {
-  font-size: 13px;
+  font-size: 14px;
 }
 
-.form-label {
+.fs-13, .form-label {
   font-size: 13px;
 }
 
@@ -71,6 +71,15 @@
     a#click2detail {
       display: none;
     }
+
+    a#click2full {
+      i.bi-arrows-fullscreen {
+        display: none;
+      }
+      i.bi-arrows-angle-contract {
+        display: block;
+      }
+    }
   }
 
   #script-editor.collapsed {
@@ -100,6 +109,13 @@
     padding: 5px 15px;
     text-align: center;
     font-size: 10px;
+
+    i.bi-arrows-fullscreen {
+      display: block;
+    }
+    i.bi-arrows-angle-contract {
+      display: none;
+    }
   }
 
   a {
@@ -137,7 +153,7 @@ small, .small {
   a.edit-comment {
     position: absolute;
     right: 10px;
-    top: 10px;
+    top: 7px;
   }
 
   &.editing {
@@ -151,7 +167,70 @@ small, .small {
 }
 
 .editor-toolbar {
+  text-align: right;
   button {
     color: #808080;
   }
+}
+
+a {
+  text-decoration: none;
+}
+
+#activities-section {
+
+  ul {
+    overflow-y: auto;
+    max-height: 400px;
+    box-sizing: border-box;
+    li {
+      width: 100%;
+      .activitiy-time {
+        .fs13px {
+          font-size: 13px;
+        }
+      }
+    }
+  }
+
+}
+
+nav.execution-paging {
+  margin-top: 30px;
+  a.page-link {
+    background-color: initial;
+    border: none;
+    color: #333;
+    outline: none;
+  }
+  .disabled>.page-link, .page-link.disabled {
+    background-color: initial;
+  }
+  .active>.page-link, .page-link.active {
+    background-color: #0d6efd;
+    color: #FFF;
+    border-radius: 7px;
+  }
+}
+
+hr.smoothly {
+  border: 0;
+  height: 1px;
+  background-image: linear-gradient(to right, rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0));
+}
+
+ul li{
+  &.task-is-rejected {
+    background: asset-url('executions/rejected.png') no-repeat;
+    background-position: calc(100% - 70px) center;
+  }
+
+  &.task-is-approved {
+    background: asset-url('executions/approved.png') no-repeat;
+    background-position: calc(100% - 70px) center;
+  }
+}
+
+#insights_chart {
+  width: 100%;
 }

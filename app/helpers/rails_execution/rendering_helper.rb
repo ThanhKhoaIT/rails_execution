@@ -27,8 +27,8 @@ module RailsExecution
     def render_notification_message(mode, message)
       case mode
       when 'alert'
-        content_tag :div, class: 'alert alert-success align-items-center' do
-          concat content_tag(:i, nil, class: 'bi bi-check-circle')
+        content_tag :div, class: 'alert alert-warning align-items-center' do
+          concat content_tag(:i, nil, class: 'bi bi-x-octagon mr-2')
           concat content_tag(:span, message, class: 'ms-2')
         end
       when 'notice'
@@ -44,10 +44,22 @@ module RailsExecution
       @task_reviewed_status[task] ||= task.task_reviews.find_by(owner_id: current_owner&.id)&.status&.inquiry
     end
 
-    def re_card_content(&block)
-      content_tag :div, class: 'my-3 p-3 bg-body rounded shadow-sm' do
+    def re_page_actions(&block)
+      content_for :page_actions do
+        content_tag :span, class: 'ms-2' do
+          capture(&block)
+        end
+      end
+    end
+
+    def re_card_content(id: nil, &block)
+      content_tag :div, id: id, class: 'my-3 p-3 bg-body rounded shadow-sm' do
         capture(&block)
       end
+    end
+
+    def re_render_paging(relation)
+      render partial: 'rails_execution/shared/paging', locals: { page: relation.re_current_page, total_pages: relation.re_total_pages }
     end
 
     def re_badge_color(status)
@@ -61,9 +73,12 @@ module RailsExecution
       {
         bad: 'danger',
         good: 'success',
+        closed: 'danger',
+        created: 'primary',
         rejected: 'danger',
         approved: 'success',
         reviewing: 'secondary',
+        completed: 'success',
       }[text] || 'secondary'
     end
 

@@ -1,29 +1,25 @@
-:javascript
-  window.editor = ace.edit("script-editor", {
-    wrap: true,
-    readOnly: true,
-    printMarginColumn: false,
-  });
-  var RubyMode = ace.require("ace/mode/ruby").Mode;
-  editor.setTheme("ace/theme/solarized_dark");
-  editor.session.setMode(new RubyMode());
+- if current_task.script.present?
+  :javascript
+    window.editor = ace.edit("script-editor", {
+      wrap: true,
+      readOnly: true,
+      printMarginColumn: false,
+    });
+    var RubyMode = ace.require("ace/mode/ruby").Mode;
+    editor.setTheme("ace/theme/solarized_dark");
+    editor.session.setMode(new RubyMode());
 
-  $('#click2detail').click(function() {
-    this.remove();
-    $('#script-editor').removeClass('collapsed');
-    window.editor.resize();
-    return false;
-  })
-  $('#click2full').click(function() {
-    $('#task-detail').toggleClass('fullscreen');
-    if ($('#task-detail').hasClass('fullscreen')) {
-      $(this).html('Normal Display');
-    } else {
-      $(this).html('Full Screen');
-    }
-    window.editor.resize();
-    return false;
-  })
+    $('#click2detail').click(function() {
+      this.remove();
+      $('#script-editor').removeClass('collapsed');
+      window.editor.resize();
+      return false;
+    })
+    $('#click2full').click(function() {
+      $('#task-detail').toggleClass('fullscreen');
+      window.editor.resize();
+      return false;
+    })
 
 - if current_task.description.present?
   :javascript

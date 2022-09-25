@@ -12,6 +12,8 @@ module RailsExecution
         app.config.assets.precompile << 'executions/logo.png'
         app.config.assets.precompile << 'executions/robot.png'
         app.config.assets.precompile << 'executions/favicon.png'
+        app.config.assets.precompile << 'executions/rejected.png'
+        app.config.assets.precompile << 'executions/approved.png'
         app.config.assets.precompile << 'executions/bootstrap-icons.woff' # Icons font
       end
     end

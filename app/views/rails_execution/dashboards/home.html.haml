@@ -1,1 +1,24 @@
-HOME
+= re_card_content do
+  %h5.section-title Overview
+  .row
+    .col
+      .card.text-center
+        .card-header= link_to 'In Processing', tasks_path
+        .card-body
+          %span.fs-2.fw-lighter= @in_processing_count
+          %span tasks
+    .col
+      .card.text-center
+        .card-header= link_to 'Completed', completed_tasks_path
+        .card-body
+          %span.fs-2.fw-lighter= @tasks_count['completed'].to_i
+          %span tasks
+    .col
+      .card.text-center
+        .card-header= link_to 'Closed', closed_tasks_path
+        .card-body
+          %span.fs-2.fw-lighter= @tasks_count['closed'].to_i
+          %span tasks
+
+- if show_insights_chart?
+  = render partial: 'rails_execution/dashboards/charts/insights'

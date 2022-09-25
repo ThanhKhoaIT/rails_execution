@@ -1,11 +1,11 @@
-= re_card_content do
+= re_card_content id: 'activities-section' do
   %h5.section-title Activities
   %ul.list-unstyled
-    - current_task.activities.descending.each do |activitiy|
+    - current_task.activities.descending.preload(:owner).each do |activitiy|
       %li.row
         .col
           = render_user_info(activitiy.owner, avatar_size: '20x20')
           %p.small.mt-1= activitiy.message
-        .col-4.text-end
-          %small= activitiy.created_at.strftime('%Y/%m/%d')
-          %p= activitiy.created_at.strftime('%H:%M')
+        .col-4.text-end.activitiy-time
+          %span.fs13px= activitiy.created_at.strftime('%Y/%m/%d')
+          %p.text-muted= activitiy.created_at.strftime('%H:%M')

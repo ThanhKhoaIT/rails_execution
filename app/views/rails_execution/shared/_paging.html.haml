@@ -1,0 +1,35 @@
+- return if total_pages <= 1
+- original_params = params.permit!.to_h
+
+- gap_number = 2
+- page_numbers = (1..total_pages).to_a
+- begin_paging = (1..(1 + gap_number)).to_a
+- middle_paging = page_numbers & ((page - gap_number)..(page + gap_number)).to_a
+- end_paging = page_numbers & ((total_pages - gap_number)..total_pages).to_a
+
+- if begin_paging.last < middle_paging.first.pred
+  - begin_paging[-1] = 'gap1'
+- if middle_paging.last < end_paging.first.pred
+  - end_paging[0] = 'gap2'
+- page_numbers = begin_paging + middle_paging + end_paging
+
+%nav.execution-paging
+  %ul.pagination.justify-content-center
+    - if page > 1
+      %li.page-item
+        = link_to original_params.merge(page: page.pred), class: 'page-link' do
+          %i.bi.bi-chevron-left
+
+    - page_numbers.uniq.each do |page_num|
+      - if page == page_num
+        - item_css = 'active'
+      - elsif page_num.to_s.start_with?('gap')
+        - page_num, item_css = '...', 'disabled'
+
+      %li.page-item{ class: item_css }
+        = link_to page_num, original_params.merge(page: page_num), class: 'page-link'
+
+    - if page < total_pages
+      %li.page-item
+        = link_to original_params.merge(page: page.next), class: 'page-link' do
+          %i.bi.bi-chevron-right

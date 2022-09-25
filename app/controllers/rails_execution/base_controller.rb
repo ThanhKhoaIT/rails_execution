@@ -6,6 +6,7 @@ module RailsExecution
     clear_helpers
 
     include RailsExecution::BaseHelper
+    include RailsExecution::PolicyHelper
     helper RailsExecution::RenderingHelper
     helper RailsExecution::PolicyHelper
 

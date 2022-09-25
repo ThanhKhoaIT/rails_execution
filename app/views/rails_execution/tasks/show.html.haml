@@ -1,3 +1,11 @@
+= re_page_actions do
+  - if can_close_task?(current_task)
+    = link_to 'Close', task_path(current_task), class: 'btn btn-outline-danger', method: :delete, data: { confirm: 'Are you sure?' }
+  - elsif current_task.is_closed?
+    = link_to 'Re-Open', reopen_task_path(current_task), class: 'btn btn-outline-info', method: :patch, data: { confirm: 'Are you sure?' }
+
+  = link_to 'Edit', edit_task_path(current_task), class: 'btn btn-outline-warning me-2'
+
 .row
   .col-md-8
     = re_card_content do
@@ -12,11 +20,20 @@
           %p.text-muted.text-center No description
 
     = re_card_content do
-      %h5.section-title.mb-3 Script
-      #task-detail
-        = link_to 'Full Screen', '#full-screen', class: 'btn', id: 'click2full'
-        #script-editor.collapsed= current_task.script
-        = link_to '＋ Click to detail', '#detail', class: 'btn', id: 'click2detail'
+      - if current_task.script.blank?
+        %p.text-center.text-muted.mt-3
+          %i.bi.bi-quote.fs-5
+          Script is empty!
+      - else
+        %h5.section-title.mb-3 Script
+        #task-detail
+          = link_to '#full-screen', class: 'btn', id: 'click2full' do
+            %i.bi.bi-arrows-fullscreen
+            %i.bi.bi-arrows-angle-contract
+          #script-editor.collapsed= current_task.script
+          = link_to '#detail', class: 'btn', id: 'click2detail' do
+            %i.bi.bi-arrow-bar-down.me-2
+            Click to detail
 
     = render partial: 'rails_execution/tasks/comments', locals: { new_comment: @new_comment }
 
@@ -26,21 +43,9 @@
         %h5.section-title.mb-3 Requestor
         = render_user_info(current_task.owner, avatar_size: '40x40')
 
-    - if display_decide?(current_task)
-      = re_card_content do
-        %h5.section-title
-          What is your decision?
-          .float-end= re_badge_color(task_reviewed_status(current_task))
-        .row.mt-3
-          .col= render_user_info(current_owner, avatar_size: '20x20')
-          .col-6.text-end
-            - unless task_reviewed_status(current_task)&.rejected?
-              = link_to 'Reject', reject_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger'
-            - unless task_reviewed_status(current_task)&.approved?
-              = link_to 'Approve', approve_task_path(current_task), method: :patch, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-success'
-
-    = render partial: 'status'
     = render partial: 'reviewers'
+    = render partial: 'status'
+    = render partial: 'actions'
     = render partial: 'activities'
 
 = render partial: 'show_scripts'

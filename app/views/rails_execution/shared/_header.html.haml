@@ -3,11 +3,11 @@
     .d-flex.flex-wrap.align-items-center.justify-content-center.justify-content-lg-start
       = link_to root_path, class: 'd-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none' do
         = image_tag 'executions/logo.png', size: '30x30'
-      %ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0
-        %li= link_to 'Dashboard', root_path, class: 'nav-link px-2 link-secondary'
-        %li= link_to 'Requests', tasks_path, class: 'nav-link px-2 link-dark'
-        %li= link_to 'Approved', tasks_path, class: 'nav-link px-2 link-dark'
-        %li= link_to 'Scheduled', tasks_path, class: 'nav-link px-2 link-dark'
-        %li= link_to 'Completed', tasks_path, class: 'nav-link px-2 link-dark'
+      %ul.nav.col-12.col-lg-auto.me-lg-auto.mb-2.justify-content-center.mb-md-0.ms-3
+        %li= link_to 'Dashboard', root_path, class: "nav-link px-2 link-#{ current_page?(root_path) ? 'secondary' : 'dark' }"
+        %li= link_to 'Processing', tasks_path, class: "nav-link px-2 link-#{ current_page?(tasks_path) ? 'secondary' : 'dark' }"
+        %li= link_to 'Completed', completed_tasks_path, class: "nav-link px-2 link-#{ current_page?(completed_tasks_path) ? 'secondary' : 'dark' }"
+        %li= link_to 'Closed', closed_tasks_path, class: "nav-link px-2 link-#{ current_page?(closed_tasks_path) ? 'secondary' : 'dark' }"
       .col-md-3.text-end
-        = link_to 'Add', new_task_path, class: 'btn btn-primary me-2'
+        = yield :page_actions
+        = link_to 'New Task', new_task_path, class: 'btn btn-outline-primary ms-2'

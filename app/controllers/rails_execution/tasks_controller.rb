@@ -4,16 +4,17 @@ module RailsExecution
   class TasksController < ::RailsExecution::BaseController
 
     def index
-      paging = ::RailsExecution::Paging.new(page: params[:page], per_page: params[:per_page])
-      @tasks = paging.call(RailsExecution::Task.processing.descending)
+      paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
+      processing_tasks = ::RailsExecution::Task.processing.descending.includes(:owner)
+      @tasks = paging.call(processing_tasks)
     end
 
     def new
-      @task = RailsExecution::Task.new
+      @task = ::RailsExecution::Task.new
     end
 
     def create
-      @task = RailsExecution::Task.new({
+      @task = ::RailsExecution::Task.new({
         status: :created,
         owner_id: current_owner&.id,
         owner_type: ::RailsExecution.configuration.owner_model.to_s,
@@ -36,6 +37,18 @@ module RailsExecution
     end
 
     def destroy
+      unless can_close_task?(current_task)
+        flash[:alert] = "You can't close this Task right now"
+        redirect_to(:back) and return
+      end
+
+      if current_task.update(status: :closed)
+        current_task.activities.create(owner: current_owner, message: 'Closed the task')
+        redirect_to(action: :show) and return
+      else
+        flash[:alert] = "Has problem when close this Task: #{current_task.errors.full_messages.join(', ')}"
+        redirect_to(:back) and return
+      end
     end
 
     def edit
@@ -50,7 +63,6 @@ module RailsExecution
       }
 
       update_data[:script] = params.dig(:task, :script) if @task.script_editable?
-      update_data[:status] = :reviewing if @task.is_approved?
       @task.assign_reviewers(params.dig(:task, :task_review_ids).to_a)
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(update_data[:script]).call ? 'good' : 'bad'
 
@@ -59,6 +71,28 @@ module RailsExecution
       else
         render action: :edit
       end
+    end
+
+    def completed
+      paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
+      completed_tasks = ::RailsExecution::Task.is_completed.descending.includes(:owner)
+      @tasks = paging.call(completed_tasks)
+    end
+
+    def closed
+      paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
+      closed_tasks = ::RailsExecution::Task.is_closed.descending.includes(:owner)
+      @tasks = paging.call(closed_tasks)
+    end
+
+    def reopen
+      if current_task.update(status: :created)
+        current_task.activities.create(owner: current_owner, message: 'Re-opened the Task')
+        flash[:notice] = 'Your task is re-opened'
+      else
+        flash[:alert] = "Re-open is failed: #{current_task.errors.full_messages.join(', ')}"
+      end
+      redirect_to action: :show
     end
 
     def reject
@@ -79,22 +113,39 @@ module RailsExecution
       redirect_to action: :show
     end
 
+    def execute
+      unless can_execute_task?(current_task)
+        flash[:alert] = "This task can't execute: #{how_to_executable(current_task)}"
+        redirect_to(action: :show) and return
+      end
+
+      execute_service = ::RailsExecution::Services::Execution.new(current_task)
+      if execute_service.call
+        current_task.update(status: :completed)
+        current_task.activities.create(owner: current_owner, message: 'Execute: The task is completed')
+        flash[:notice] = 'This task is executed'
+        redirect_to(action: :show) and return
+      else
+        flash[:alert] = "Sorry!!! This task can't execute right now"
+      end
+    end
+
     private
 
     def reviewers
       @reviewers ||= ::RailsExecution.configuration.reviewers&.call.to_a.map do |reviewer|
-        OpenStruct.new(reviewer)
+        ::OpenStruct.new(reviewer)
       end
     end
     helper_method :reviewers
 
     def current_task
-      @current_task ||= RailsExecution::Task.find(params[:id])
+      @current_task ||= ::RailsExecution::Task.find(params[:id])
     end
     helper_method :current_task
 
     def reviewing_accounts
-      @reviewing_accounts ||= current_task.task_reviews.where.not(owner_id: current_owner&.id)
+      @reviewing_accounts ||= current_task.task_reviews
     end
     helper_method :reviewing_accounts
 

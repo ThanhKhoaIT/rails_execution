@@ -8,12 +8,14 @@ module RailsExecution
       end
 
       def approve
+        task.update(status: :approved)
         review.update(status: :approved)
         add_activity('approved')
       end
 
       def reject
         review.update(status: :rejected)
+        task.update(status: :rejected) if make_task_to_rejected?
         add_activity('rejected')
       end
 
@@ -27,7 +29,11 @@ module RailsExecution
       end
 
       def add_activity(status)
-        task.activities.create(owner: reviewer, message: "Make to #{status}")
+        task.activities.create(owner: reviewer, message: "#{status.titleize} the task")
+      end
+
+      def make_task_to_rejected?
+        task.task_reviews.is_approved.empty?
       end
 
     end

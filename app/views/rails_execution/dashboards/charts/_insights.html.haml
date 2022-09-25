@@ -1,0 +1,27 @@
+= re_card_content do
+  %h5.section-title Insights
+  %canvas{ id: :insights_chart, height: 300 }
+
+:javascript
+  $.get("#{insights_dashboards_path(:json)}", function(data) {
+    new Chart(document.getElementById('insights_chart').getContext('2d'), {
+      type: 'line',
+      data: data,
+      options: {
+        responsive: true,
+        plugins: {
+          legend: false,
+        },
+        layout: {
+          padding: 20,
+        },
+        scales: {
+          y: {
+            min: 0,
+            ticks: { stepSize: 1 },
+            grid: { display: false },
+          },
+        },
+      },
+    });
+  });
