@@ -6,8 +6,7 @@
     .col
       .mb-3.mt-4= f.text_field :title, { class: 'form-control', placeholder: 'Title', required: true }
       .mb-3.mt-4= f.text_area :description, { class: 'form-control', placeholder: 'Description', rows: 10 }
-
-    - if RailsExecution.configuration.reviewers.present?
+    - if show_form_sidebar?(current_task)
       .col-4
         %h5.mb-2.mt-4.section-title Reviewers
         #reviewers.mb-3
@@ -35,14 +34,15 @@
               = link_to 'More file', '#add-more-file', data: { fields_html: render(partial: 'attachment_file_fields') }, class: 'btn text-primary', id: 'js-add-more-file'
 
 
-    .col-md-12.mb-3.mt-3
-      %h5.section-title Script
-      = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
-      #script-editor-container
-        #script-editor= task.script
-        = link_to '#full-screen', class: 'btn', id: 'click2full' do
-          %i.bi.bi-arrows-fullscreen
-          %i.bi.bi-arrows-angle-contract
+    - if current_task.in_processing?
+      .col-md-12.mb-3.mt-3
+        %h5.section-title Script
+        = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
+        #script-editor-container
+          #script-editor= task.script
+          = link_to '#full-screen', class: 'btn', id: 'click2full' do
+            %i.bi.bi-arrows-fullscreen
+            %i.bi.bi-arrows-angle-contract
 
   .mb-3.mt-3.text-end
     %hr

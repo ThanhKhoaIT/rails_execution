@@ -3,7 +3,7 @@
     %h5.section-title Logs
     %ul.list-unstyled#task-logs
       - task_logs.each do |task_log|
-        %li.fs-13.row
+        %li.fs-13.row.mb-2
           .col.text-muted
             %i.bi.bi-journal-text
             = re_get_file_name(task_log)

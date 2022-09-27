@@ -276,3 +276,8 @@ ul#task-logs {
 .normal-text {
   font-size: 0.8em;
 }
+
+#description-html {
+  max-height: 400px;
+  overflow-y: auto;
+}

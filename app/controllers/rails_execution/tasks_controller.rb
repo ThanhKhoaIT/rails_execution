@@ -70,12 +70,13 @@ module RailsExecution
         description: params.dig(:task, :description),
       }
 
-      update_data[:script] = params.dig(:task, :script) if @task.script_editable?
+      update_data[:script] = params.dig(:task, :script) if @task.in_processing?
       @task.assign_reviewers(params.dig(:task, :task_review_ids).to_a)
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(update_data[:script]).call ? 'good' : 'bad'
 
       if @task.update(update_data)
         @task.add_files(params.dig(:attachments).to_a, current_owner)
+        @task.activities.create(owner: current_owner, message: 'Updated the Task')
         redirect_to action: :show
       else
         render action: :edit

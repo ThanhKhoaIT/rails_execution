@@ -28,11 +28,6 @@ class RailsExecution::Task < RailsExecution::AppModel
 
   before_update :re_assign_status
   after_commit :create_activity, on: :create, if: :owner
-  after_commit :update_activity, on: :update, if: :owner
-
-  def script_editable?
-    self.in_processing?
-  end
 
   def in_processing?
     PROCESSING_STATUSES.include?(self.status)
@@ -62,10 +57,6 @@ class RailsExecution::Task < RailsExecution::AppModel
 
   def create_activity
     self.activities.create(owner: self.owner, message: 'Created the task')
-  end
-
-  def update_activity
-    self.activities.create(owner: self.owner, message: 'Updated the Task')
   end
 
   def re_assign_status

@@ -18,6 +18,12 @@ module RailsExecution
       task.task_reviews.exists?
     end
 
+    def show_form_sidebar?(task)
+      return false unless current_task.in_processing?
+
+      ::RailsExecution.configuration.file_upload || ::RailsExecution.configuration.reviewers.present?
+    end
+
     def can_create_task?
       ::RailsExecution.configuration.task_creatable.call(current_owner)
     end
