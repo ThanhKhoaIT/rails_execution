@@ -10,7 +10,10 @@
     }
   });
 
-  var editor = ace.edit("script-editor", { printMarginColumn: false });
+  var editor = ace.edit("script-editor", {
+    printMarginColumn: false,
+    readOnly: #{!current_task.in_processing?},
+  });
   var RubyMode = ace.require("ace/mode/ruby").Mode;
   editor.setTheme("ace/theme/solarized_dark");
   editor.session.setMode(new RubyMode());
@@ -22,5 +25,10 @@
 
   $('#click2full').click(function() {
     $('#script-editor-container').toggleClass('fullscreen');
+    return false;
+  });
+
+  $('#js-add-more-file').click(function() {
+    AddMoreFile();
     return false;
   });

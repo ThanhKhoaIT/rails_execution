@@ -4,9 +4,9 @@ module RailsExecution
   module Files
     class Uploader
 
-      def initialize(task, files, owner: nil)
+      def initialize(task, inputs, owner: nil)
         @task = task
-        @files = files
+        @files = files_filter(inputs).compact
         @owner = owner
       end
 
@@ -19,6 +19,23 @@ module RailsExecution
       attr_reader :task
       attr_reader :files
       attr_reader :owner
+
+      def files_filter(inputs)
+        inputs.map do |_multiple, attachment|
+          next if attachment['name'].blank?
+          next if attachment['file'].blank?
+          next unless attachment['file'].content_type.in?(acceptable_file_types)
+
+          OpenStruct.new({
+            name: attachment['name'],
+            file: attachment['file'],
+          })
+        end
+      end
+
+      def acceptable_file_types
+        ::RailsExecution.configuration.acceptable_file_types.values
+      end
 
     end
   end

@@ -7,10 +7,10 @@
       %i.bi.bi-gear.fs-5.text-dark
     .review-comment-content
       .g-mb-15.mb-2
-        %h6.g-color-gray-dark-v1.mb-0= render_owner_name(comment.owner)
-        %span.g-color-gray-dark-v4.g-font-size-12= comment.created_at.strftime('%Y/%m/%d %H:%M')
+        .user-info.g-color-gray-dark-v1.mb-0= render_owner_name(comment.owner)
+        .fs-13.text-muted= comment.created_at.strftime('%Y/%m/%d %H:%M')
       %p.content-markdown= comment.content
-      %p.content-html
+      %p.content-html.normal-text
     .edit-comment-form.hidden
       = form_for comment, url: task_comment_path(current_task, comment, comment_key: comment_key), remote: true do |f|
         = f.text_area :content, { id: "#{comment_key}_content" }

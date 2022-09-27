@@ -1,11 +1,12 @@
-= re_card_content do
-  .text-center
-    - if can_execute_task?(current_task)
-      = link_to 'Execute NOW!!!', execute_task_path(current_task), class: 'btn btn-primary', method: :patch, data: { confirm: 'Are you sure?' }
-    - else
-      %p.text-danger.mb-0.fw-bold
-        %i.bi.bi-x-octagon.me-1
-        Not ready to Execute!
-      %span.fs-13.text-muted.fw-lighter.mb-0
-        %i.bi.bi-megaphone
-        = how_to_executable(current_task)
+- unless current_task.is_completed?
+  = re_card_content do
+    .text-center
+      - if can_execute_task?(current_task)
+        = link_to 'Execute NOW!!!', execute_task_path(current_task), class: 'btn btn-primary', method: :patch, data: { confirm: 'Are you sure?' }
+      - else
+        %p.text-danger.mb-0.fw-bold
+          %i.bi.bi-x-octagon.me-1
+          Not ready to Execute!
+        %span.fs-13.text-muted.fw-lighter.mb-0
+          %i.bi.bi-megaphone
+          = how_to_executable(current_task)

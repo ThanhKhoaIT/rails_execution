@@ -258,3 +258,21 @@ a#click2full {
     display: none;
   }
 }
+
+ul#task-logs {
+  li {
+    .click2download {
+      opacity: 0.3;
+    }
+  }
+
+  &:hover {
+    li .click2download {
+      opacity: 1;
+    }
+  }
+}
+
+.normal-text {
+  font-size: 0.8em;
+}

@@ -15,7 +15,10 @@ module RailsExecution
 
         build_execution_file!
         load_execution_file!
+        setup_logger!
         execute_class!
+        storing_log_file!
+        restore_logger!
       end
 
       private
@@ -32,12 +35,14 @@ module RailsExecution
         ruby_code = <<~RUBY
           class #{class_name} < ::RailsExecution::Services::Executor
             def call
-              #{task.script}
+              task.with_lock do
+                #{task.script}
+              end
             end
           end
         RUBY
 
-        @file = ::Tempfile.new(class_name)
+        @file = ::Tempfile.new([class_name, '.rb'])
         @file.binmode
         @file.write(ruby_code)
         @file.flush
@@ -48,8 +53,22 @@ module RailsExecution
         load @file.path
       end
 
+      def setup_logger!
+        @model_logger = ::ActiveRecord::Base.logger
+        @tempfile = Tempfile.new(["rails_execution_#{Time.current.strftime('%Y%m%d_%H%M%S')}", '.log'])
+        ::ActiveRecord::Base.logger = ::Logger.new(@tempfile.path)
+      end
+
       def execute_class!
         class_name.constantize.new(task).call
+      end
+
+      def storing_log_file!
+        ::RailsExecution.configuration.logging.call(@tempfile, task)
+      end
+
+      def restore_logger!
+        ::ActiveRecord::Base.logger = @model_logger
       end
 
     end

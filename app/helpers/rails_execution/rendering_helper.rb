@@ -62,6 +62,14 @@ module RailsExecution
       render partial: 'rails_execution/shared/paging', locals: { page: relation.re_current_page, total_pages: relation.re_total_pages }
     end
 
+    def re_attachment_file_acceptable_types
+      ::RailsExecution.configuration.acceptable_file_types.keys.join(',')
+    end
+
+    def re_get_file_name(url)
+      URI(url).path.split('/').last
+    end
+
     def re_badge_color(status)
       color = status_to_color(status.to_s.downcase.to_sym)
       content_tag :small, status.to_s.titleize, class: "fw-light badge rounded-pill text-bg-#{color}"

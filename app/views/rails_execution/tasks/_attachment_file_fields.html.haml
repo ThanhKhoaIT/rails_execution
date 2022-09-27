@@ -1,0 +1,3 @@
+%li.row.mb-2
+  .col= text_field :attachments, :name, { class: 'form-control file-name', placeholder: 'Name', name: "attachments[0][name]" }
+  .col-6.overflow-hidden= file_field :attachments, :file, { class: 'form-control file-upload', accept: re_attachment_file_acceptable_types, name: "attachments[0][file]" }

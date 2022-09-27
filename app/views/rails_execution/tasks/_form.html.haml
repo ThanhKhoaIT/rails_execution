@@ -1,4 +1,4 @@
-= form_for task do |f|
+= form_for task, html: { enctype: 'multipart/form-data' } do |f|
   .row
     - if task.errors.any?
       .col-12.text-danger.small.mt-3= task.errors.full_messages.join("\n")
@@ -9,15 +9,34 @@
 
     - if RailsExecution.configuration.reviewers.present?
       .col-4
-        %p.text-bold.mb-0.mt-1.section-title Reviewers:
+        %h5.mb-2.mt-4.section-title Reviewers
         #reviewers.mb-3
           - if reviewers.any?
             = f.collection_select :task_review_ids, reviewers, :id, :name, { selected: task.reviewer_ids }, { multiple: true, class: 'select2 col-12' }
           - else
-            %p.small.text-muted Nobody
+            %p.small.text-muted Nobody can add
+
+        - if RailsExecution.configuration.file_upload
+          %h5.mb-2.mt-4.section-title Attachment files
+          %ul.list-unstyled.mt-3
+            - task_attachment_files.each do |name, url|
+              %li.row.normal-text
+                .col
+                  %i.bi.fs-3.text-muted{ class: "bi-file-text bi-filetype-#{url.split('.').last}" }
+                  = name
+                .col-6.text-end
+                  %p.mb-0= link_to 'Download', url, class: 'text-muted'
+                  %small Filename: #{re_get_file_name(url)}
+          #attachment_files.mb-3
+            %ul.list-unstyled= render partial: 'attachment_file_fields'
+
+            .mt-3.text-center
+              %hr.smoothly
+              = link_to 'More file', '#add-more-file', data: { fields_html: render(partial: 'attachment_file_fields') }, class: 'btn text-primary', id: 'js-add-more-file'
+
 
     .col-md-12.mb-3.mt-3
-      %h5.section-title Script:
+      %h5.section-title Script
       = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
       #script-editor-container
         #script-editor= task.script

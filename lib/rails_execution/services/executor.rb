@@ -4,6 +4,7 @@ module RailsExecution
 
       def initialize(task)
         @task = task
+        @file_reader = ::RailsExecution.configuration.file_reader.new(task)
       end
 
       def call
@@ -13,6 +14,10 @@ module RailsExecution
       private
 
       attr_reader :task
+
+      def file(name)
+        @file_reader.get_file(name)
+      end
 
     end
   end

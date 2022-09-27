@@ -1,3 +1,14 @@
+- if task_logs.any?
+  = re_card_content do
+    %h5.section-title Logs
+    %ul.list-unstyled#task-logs
+      - task_logs.each do |task_log|
+        %li.fs-13.row
+          .col.text-muted
+            %i.bi.bi-journal-text
+            = re_get_file_name(task_log)
+          .col-3.text-end= link_to 'Download', task_log, target: :_blank, class: 'text-muted click2download'
+
 = re_card_content id: 'activities-section' do
   %h5.section-title Activities
   %ul.list-unstyled
@@ -5,7 +16,7 @@
       %li.row
         .col
           = render_user_info(activitiy.owner, avatar_size: '20x20')
-          %p.small.mt-1= activitiy.message
-        .col-4.text-end.activitiy-time
-          %span.fs13px= activitiy.created_at.strftime('%Y/%m/%d')
+          %p.normal-text.mt-1= activitiy.message
+        .col-3.text-end.activitiy-time
+          %span.fs13px.text-muted= activitiy.created_at.strftime('%Y/%m/%d')
           %p.text-muted= activitiy.created_at.strftime('%H:%M')

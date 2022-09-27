@@ -54,6 +54,10 @@ class RailsExecution::Task < RailsExecution::AppModel
     self.task_reviews.pluck(:owner_id)
   end
 
+  def add_files(attachments, current_owner)
+    ::RailsExecution.configuration.file_uploader.new(self, attachments, owner: current_owner).call
+  end
+
   private
 
   def create_activity

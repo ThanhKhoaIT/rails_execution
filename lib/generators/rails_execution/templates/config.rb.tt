@@ -24,9 +24,21 @@ RailsExecution.configuration do |config|
 
   # Advanced
   # config.file_upload = true
-  # config.file_types = DEFAULT_FILE_TYPES.values
+  # config.acceptable_file_types = {
+  #   '.jpeg': 'image/jpeg',
+  #   '.pdf': 'application/pdf',
+  #   '.csv': ['text/csv', 'text/plain'],
+  # }
   # config.file_uploader = RailsExecution::File::Uploader
   # config.file_reader = RailsExecution::File::Reader
+
+  # Logger
+  # config.logging = lambda do |log_file, task|
+  #   YourAttachment.create(file: log_file, task: task) # Paperclip example
+  # end
+  # config.logging_files = lambda do |task|
+  #   YourAttachment.where(task: task).map { |item| item.file.url } # Paperclip example
+  # end
 
   # Paging
   # config.per_page = 30 # Default: 20

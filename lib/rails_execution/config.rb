@@ -5,11 +5,12 @@ module RailsExecution
 
     DEFAULT_PER_PAGE = 20
     DEFAULT_FILE_TYPES = {
-      csv: 'text/plain',
-      png: 'image/png',
-      gif: 'image/gif',
-      jpeg: 'image/jpeg',
-      pdf: 'application/pdf',
+      '.png': 'image/png',
+      '.gif': 'image/gif',
+      '.jpg': 'image/jpg',
+      '.jpeg': 'image/jpeg',
+      '.pdf': 'application/pdf',
+      '.csv': ['text/csv', 'text/plain'],
     }
 
     # Owner display
@@ -30,9 +31,13 @@ module RailsExecution
 
     # Advanced
     attr_accessor :file_upload
-    attr_accessor :file_types
     attr_accessor :file_uploader
     attr_accessor :file_reader
+    attr_accessor :acceptable_file_types
+
+    # Logger
+    attr_accessor :logging # lambda
+    attr_accessor :logging_files
 
     # Paging
     attr_accessor :per_page
@@ -42,8 +47,9 @@ module RailsExecution
       self.owner_method = :current_user
       self.owner_name_method = :name
       self.owner_avatar = ->(_) { nil }
+
       self.file_upload = false
-      self.file_types = DEFAULT_FILE_TYPES.values
+      self.acceptable_file_types = DEFAULT_FILE_TYPES
       self.file_uploader = ::RailsExecution::Files::Uploader
       self.file_reader = ::RailsExecution::Files::Reader
       self.per_page = DEFAULT_PER_PAGE
@@ -54,6 +60,9 @@ module RailsExecution
       self.task_closable = -> (_user, _task) { true }
       self.task_approvable = -> (_user, _task) { true }
       self.task_executable = -> (_user, _task) { true }
+
+      self.logging = -> (_log_file, _task) { }
+      self.logging_files = -> (_task) { [] }
     end
 
   end

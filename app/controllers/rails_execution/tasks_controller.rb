@@ -75,6 +75,7 @@ module RailsExecution
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(update_data[:script]).call ? 'good' : 'bad'
 
       if @task.update(update_data)
+        @task.add_files(params.dig(:attachments).to_a, current_owner)
         redirect_to action: :show
       else
         render action: :edit
@@ -140,6 +141,11 @@ module RailsExecution
 
     private
 
+    def current_task
+      @current_task ||= ::RailsExecution::Task.find(params[:id])
+    end
+    helper_method :current_task
+
     def reviewers
       @reviewers ||= ::RailsExecution.configuration.reviewers.call.map do |reviewer|
         ::OpenStruct.new(reviewer)
@@ -147,10 +153,15 @@ module RailsExecution
     end
     helper_method :reviewers
 
-    def current_task
-      @current_task ||= ::RailsExecution::Task.find(params[:id])
+    def task_logs
+      @task_logs ||= ::RailsExecution.configuration.logging_files.call(current_task)
     end
-    helper_method :current_task
+    helper_method :task_logs
+
+    def task_attachment_files
+      @task_attachment_files ||= ::RailsExecution.configuration.file_reader.new(current_task).call
+    end
+    helper_method :task_attachment_files
 
     def reviewing_accounts
       @reviewing_accounts ||= current_task.task_reviews

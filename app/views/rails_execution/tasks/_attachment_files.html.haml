@@ -1,0 +1,13 @@
+- if RailsExecution.configuration.file_upload && task_attachment_files.any?
+  = re_card_content do
+    %h5.section-title.mb-3 Attachment files
+    %ul.list-unstyled.mt-3
+      - task_attachment_files.each do |name, url|
+        %li.row.normal-text
+          .col
+            %i.bi.fs-3.text-muted{ class: "bi-file-text bi-filetype-#{url.split('.').last}" }
+            = name
+          .col-3.text-end
+            %p.mb-0= link_to 'Download', url, class: 'text-muted'
+            %small Filename: #{re_get_file_name(url)}
+

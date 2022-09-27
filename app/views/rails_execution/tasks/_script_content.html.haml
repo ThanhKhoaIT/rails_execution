@@ -1,0 +1,15 @@
+= re_card_content do
+  - if current_task.script.blank?
+    %p.text-center.text-muted.mt-3
+      %i.bi.bi-quote.fs-5
+      Script is empty!
+  - else
+    %h5.section-title.mb-3 Script
+    #task-detail
+      = link_to '#full-screen', class: 'btn', id: 'click2full' do
+        %i.bi.bi-arrows-fullscreen
+        %i.bi.bi-arrows-angle-contract
+      #script-editor.collapsed= current_task.script
+      = link_to '#detail', class: 'btn', id: 'click2detail' do
+        %i.bi.bi-arrow-bar-down.me-2
+        Click to detail
