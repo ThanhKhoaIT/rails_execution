@@ -13,6 +13,8 @@ module RailsExecution
       '.csv': ['text/csv', 'text/plain'],
     }
 
+    attr_accessor :solo_mode # Solo mode without reviewing process
+
     # Owner display
     attr_accessor :owner_model
     attr_accessor :owner_method
@@ -43,6 +45,8 @@ module RailsExecution
     attr_accessor :per_page
 
     def initialize
+      self.solo_mode = true
+
       self.owner_model = defined?(::User) ? 'User' : nil
       self.owner_method = :current_user
       self.owner_name_method = :name

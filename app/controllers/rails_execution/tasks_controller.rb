@@ -30,6 +30,7 @@ module RailsExecution
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(@task.script).call ? 'good' : 'bad'
 
       if @task.save
+        @task.add_files(params[:attachments]&.permit!.to_h, current_owner) if ::RailsExecution.configuration.file_upload
         flash[:notice] = 'Create the request is successful!'
         redirect_to action: :index
       else
@@ -75,7 +76,7 @@ module RailsExecution
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(update_data[:script]).call ? 'good' : 'bad'
 
       if @task.update(update_data)
-        @task.add_files(params.dig(:attachments).to_a, current_owner)
+        @task.add_files(params[:attachments]&.permit!.to_h, current_owner) if ::RailsExecution.configuration.file_upload
         @task.activities.create(owner: current_owner, message: 'Updated the Task')
         redirect_to action: :show
       else
@@ -134,10 +135,11 @@ module RailsExecution
         current_task.update(status: :completed)
         current_task.activities.create(owner: current_owner, message: 'Execute: The task is completed')
         flash[:notice] = 'This task is executed'
-        redirect_to(action: :show) and return
       else
         flash[:alert] = "Sorry!!! This task can't execute right now"
       end
+
+      redirect_to(action: :show)
     end
 
     private
@@ -155,7 +157,7 @@ module RailsExecution
     helper_method :reviewers
 
     def task_logs
-      @task_logs ||= ::RailsExecution.configuration.logging_files.call(current_task)
+      @task_logs ||= ::RailsExecution.configuration.logging_files.call(current_task).select(&:present?)
     end
     helper_method :task_logs
 

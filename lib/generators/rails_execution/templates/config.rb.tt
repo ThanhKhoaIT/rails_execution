@@ -1,9 +1,11 @@
 RailsExecution.configuration do |config|
 
+  config.solo_mode = true # Without reviewing process
+
   # Owner display
   # config.owner_model = 'User'
-  config.owner_method = :current_user
-  config.owner_name_method = :fullname
+  # config.owner_method = :current_user
+  # config.owner_name_method = :fullname
   # config.owner_avatar = lambda do |owner|
   #   owner.avatar.url(:medium)
   # end
@@ -24,20 +26,35 @@ RailsExecution.configuration do |config|
 
   # Advanced
   # config.file_upload = true
+  # config.file_uploader = ::RailsExecution::FileUploader
+  # config.file_reader = ::RailsExecution::FileReader
+  # Defaults of acceptable_file_types: .png, .gif, .jpg, .jpeg, .pdf, .csv
   # config.acceptable_file_types = {
   #   '.jpeg': 'image/jpeg',
   #   '.pdf': 'application/pdf',
   #   '.csv': ['text/csv', 'text/plain'],
   # }
-  # config.file_uploader = RailsExecution::File::Uploader
-  # config.file_reader = RailsExecution::File::Reader
 
   # Logger
+  # Using Paperclip
   # config.logging = lambda do |log_file, task|
-  #   YourAttachment.create(file: log_file, task: task) # Paperclip example
+  #   YourAttachment.create(file: log_file, task: task)
   # end
   # config.logging_files = lambda do |task|
-  #   YourAttachment.where(task: task).map { |item| item.file.url } # Paperclip example
+  #   YourAttachment.where(task: task).map { |item| item.file.url }
+  # end
+  # Using ActiveStorage
+  # config.logging = lambda do |log_file, task|
+  #   attachment = YourAttachment.create!(task: task)
+  #   attachment.file.attach({
+  #     io: log_file,
+  #     filename: Time.current.strftime('%Y%m%d_%H%M%S.log'),
+  #     content_type: 'text/plain',
+  #   })
+  # end
+  # config.logging_files = lambda do |task|
+  #   ActiveStorage::Current.host = 'localhost:3000'
+  #   YourAttachment.where(task: task).map { |item| item.file.url }
   # end
 
   # Paging

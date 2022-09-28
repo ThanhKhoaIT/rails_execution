@@ -10,7 +10,7 @@
     }
   });
 
-- if current_task.in_processing?
+- if task.new_record? || task.in_processing?
   :javascript
     var editor = ace.edit("script-editor", { printMarginColumn: false });
     var RubyMode = ace.require("ace/mode/ruby").Mode;

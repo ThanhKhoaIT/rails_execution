@@ -18,6 +18,7 @@ If bundler is not being used to manage dependencies, install the gem by executin
 
 ### How to setup
     $ rails g rails_execution:install
+    $ rails g rails_execution:file_upload
 
 ## Development
 

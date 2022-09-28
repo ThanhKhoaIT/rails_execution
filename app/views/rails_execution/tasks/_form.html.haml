@@ -6,14 +6,15 @@
     .col
       .mb-3.mt-4= f.text_field :title, { class: 'form-control', placeholder: 'Title', required: true }
       .mb-3.mt-4= f.text_area :description, { class: 'form-control', placeholder: 'Description', rows: 10 }
-    - if show_form_sidebar?(current_task)
+    - if show_form_sidebar?(task)
       .col-4
-        %h5.mb-2.mt-4.section-title Reviewers
-        #reviewers.mb-3
-          - if reviewers.any?
-            = f.collection_select :task_review_ids, reviewers, :id, :name, { selected: task.reviewer_ids }, { multiple: true, class: 'select2 col-12' }
-          - else
-            %p.small.text-muted Nobody can add
+        - unless in_solo_mode?
+          %h5.mb-2.mt-4.section-title Reviewers
+          #reviewers.mb-3
+            - if reviewers.any?
+              = f.collection_select :task_review_ids, reviewers, :id, :name, { selected: task.reviewer_ids }, { multiple: true, class: 'select2 col-12' }
+            - else
+              %p.small.text-muted Nobody can add
 
         - if RailsExecution.configuration.file_upload
           %h5.mb-2.mt-4.section-title Attachment files
@@ -34,7 +35,7 @@
               = link_to 'More file', '#add-more-file', data: { fields_html: render(partial: 'attachment_file_fields') }, class: 'btn text-primary', id: 'js-add-more-file'
 
 
-    - if current_task.in_processing?
+    - if task.new_record? || task.in_processing?
       .col-md-12.mb-3.mt-3
         %h5.section-title Script
         = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
@@ -48,4 +49,4 @@
     %hr
     = f.submit (task.new_record? ? 'Create' : 'Update'), class: 'btn btn-success'
 
-= render partial: 'form_scripts'
+= render partial: 'form_scripts', locals: { task: task }

@@ -1,9 +1,3 @@
-@font-face {
-  font-display: block;
-  font-family: "bootstrap-icons";
-  src: asset-url("executions//bootstrap-icons.woff?8d200481aa7f02a2d63a331fc782cfaf") format("woff");
-}
-
 .bi::before,
 [class^="bi-"]::before,
 [class*=" bi-"]::before {

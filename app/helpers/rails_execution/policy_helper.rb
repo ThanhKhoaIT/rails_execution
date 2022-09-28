@@ -19,9 +19,15 @@ module RailsExecution
     end
 
     def show_form_sidebar?(task)
-      return false unless current_task.in_processing?
+      return false unless task.in_processing?
+      return true if ::RailsExecution.configuration.file_upload
+      return false if in_solo_mode?
 
-      ::RailsExecution.configuration.file_upload || ::RailsExecution.configuration.reviewers.present?
+      ::RailsExecution.configuration.reviewers.present?
+    end
+
+    def in_solo_mode?
+      ::RailsExecution.configuration.solo_mode
     end
 
     def can_create_task?
@@ -42,10 +48,14 @@ module RailsExecution
 
     def how_to_executable(task)
       return 'Script is empty' if task.script.blank?
-      return "It's closed now" if task.is_closed?
+      return "Task is closed" if task.is_closed?
       return "It's bad Syntax" if task.syntax_status_bad?
-      return 'This task is not approved' unless task.is_approved?
-      return 'No approval from any reviewer' if task.task_reviews.is_approved.empty?
+
+      unless in_solo_mode?
+        return 'This task is not approved' unless task.is_approved?
+        return 'No approval from any reviewer' if task.task_reviews.is_approved.empty?
+      end
+
       return "Can't executable by app policy" unless ::RailsExecution.configuration.task_executable.call(current_owner, task)
     end
 

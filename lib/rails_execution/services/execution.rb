@@ -15,10 +15,18 @@ module RailsExecution
 
         build_execution_file!
         load_execution_file!
-        setup_logger!
-        execute_class!
-        storing_log_file!
-        restore_logger!
+        is_successful = false
+        begin
+          setup_logger!
+          execute_class!
+          is_successful = true
+        rescue
+          is_successful = false
+        ensure
+          restore_logger!
+          storing_log_file!
+          return is_successful
+        end
       end
 
       private
