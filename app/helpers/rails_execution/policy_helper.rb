@@ -19,11 +19,12 @@ module RailsExecution
     end
 
     def show_form_sidebar?(task)
-      return false unless task.in_processing?
-      return true if ::RailsExecution.configuration.file_upload
-      return false if in_solo_mode?
+      return false unless (task.new_record? || task.in_processing?)
 
-      ::RailsExecution.configuration.reviewers.present?
+      [
+        ::RailsExecution.configuration.file_upload,
+        !in_solo_mode? && ::RailsExecution.configuration.reviewers.present?,
+      ].any?
     end
 
     def in_solo_mode?

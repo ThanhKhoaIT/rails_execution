@@ -145,7 +145,7 @@ module RailsExecution
     private
 
     def current_task
-      @current_task ||= ::RailsExecution::Task.find(params[:id])
+      @current_task ||= ::RailsExecution::Task.find_by(id: params[:id])
     end
     helper_method :current_task
 
