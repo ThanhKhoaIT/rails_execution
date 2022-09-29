@@ -1,35 +1,41 @@
-# RailsExecution
+# Rails Execution
+Rails Execution is an Engine to manage the Rails scripts for migration, cleanup, and fixing the bad data without deployment.
+- Supported the Syntax checker
+- Supported the Execution logs
+- Supported the Reviewing process
+- Supported the Attachment files
+- Supported the Comments communication
+- Supported the Activities tracking
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rails_execution`. To experiment with that code, run `bin/console` for an interactive prompt.
 
-TODO: Delete this and the text above, and describe your gem
+![image](https://user-images.githubusercontent.com/6081795/193129359-fc1e8858-c3e7-4376-be1e-ca453890a98d.png)
+![image](https://user-images.githubusercontent.com/6081795/193129792-39176d6e-97fa-4a47-8541-30e7169841cd.png)
 
 ## Installation
 
-Install the gem and add to the application's Gemfile by executing:
+Add the following line to your **Gemfile**:
 
-    $ bundle add rails_execution
+```ruby
+gem 'rails_execution'
+```
+Then run `bundle install`
 
-If bundler is not being used to manage dependencies, install the gem by executing:
 
-    $ gem install rails_execution
-
-## Usage
+## Getting started
 
 ### How to setup
+You need to run the generator:
+```bash
     $ rails g rails_execution:install
+```
+And you can change the config in `config/initializers/rails_execution.rb`
+
+Default is `solo_mode` without the Reviewing process
+
+To setup the Reviewing process
+
+#### Enable the Attachment files
+Run the generator to add the **FileUploader** and **FileReader**
+```bash
     $ rails g rails_execution:file_upload
-
-## Development
-
-After checking out the repo, run `bin/setup` to install dependencies. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
-
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and the created tag, and push the `.gem` file to [rubygems.org](https://rubygems.org).
-
-## Contributing
-
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/rails_execution.
-
-## License
-
-The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
+```
