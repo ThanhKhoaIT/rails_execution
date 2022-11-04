@@ -37,7 +37,10 @@
 
     - if task.new_record? || task.in_processing?
       .col-md-12.mb-3.mt-3
-        %h5.section-title Script
+        .row
+          .col
+            %h5.section-title Script
+          .col.text-end= render partial: 'tips'
         = f.text_area :script, { class: 'form-control hidden', rows: 3, id: 'main-script' }
         #script-editor-container
           #script-editor= task.script

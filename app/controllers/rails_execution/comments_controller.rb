@@ -7,11 +7,8 @@ module RailsExecution
       @new_comment = current_task.comments.new(owner: current_owner, content: params.dig(:comment, :content))
       if @new_comment.save
         current_task.activities.create(owner: current_owner, message: "Added a comment: #{@new_comment.content.truncate(30)}")
-        flash[:notice] = 'Your comment is added!'
-        redirect_to task_path(current_task)
       else
-        flash[:alert] = "Your comment can't adding!"
-        render 'rails_execution/tasks/show'
+        @alert = "Your comment can't adding!"
       end
     end
 

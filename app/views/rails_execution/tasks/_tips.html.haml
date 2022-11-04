@@ -1,0 +1,18 @@
+%h5.section-title.text-muted
+  %i.bi.bi-lightbulb
+  %strong ProTip:
+  %span#all-tips
+    %span.tip
+      Use
+      %code Rails.logger.info 'message...'
+      to add a message into log file
+    - if RailsExecution.configuration.file_upload
+      %span.tip
+        Call
+        %code file('name')
+        to read the file IO
+:javascript
+  var tipsCount = $('#all-tips span.tip').length;
+  var displayIndex = Math.floor(Math.random() * tipsCount);
+  $($('#all-tips span.tip')[displayIndex]).show();
+

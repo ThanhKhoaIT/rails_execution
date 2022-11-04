@@ -3,8 +3,9 @@
 .media.media-comment.d-flex{ id: comment_key }
   = render_owner_avatar(comment.owner, size: '50x50')
   .media-body.rounded.shadow-sm.g-bg-secondary.g-pa-15.w-100
-    = link_to '#edit-comment', class: 'edit-comment' do
-      %i.bi.bi-gear.fs-5.text-dark
+    - if comment.owner == current_owner
+      = link_to '#edit-comment', class: 'edit-comment' do
+        %i.bi.bi-gear.fs-5.text-dark
     .review-comment-content
       .g-mb-15.mb-2
         .user-info.g-color-gray-dark-v1.mb-0= render_owner_name(comment.owner)

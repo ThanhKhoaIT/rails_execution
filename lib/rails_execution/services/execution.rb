@@ -63,8 +63,10 @@ module RailsExecution
 
       def setup_logger!
         @model_logger = ::ActiveRecord::Base.logger
-        @tempfile = Tempfile.new(["rails_execution_#{Time.current.strftime('%Y%m%d_%H%M%S')}", '.log'])
+        @rails_logger = ::Rails.logger
+        @tempfile = ::Tempfile.new(["rails_execution_#{Time.current.strftime('%Y%m%d_%H%M%S')}", '.log'])
         ::ActiveRecord::Base.logger = ::Logger.new(@tempfile.path)
+        ::Rails.logger = ::ActiveRecord::Base.logger
       end
 
       def execute_class!
@@ -77,6 +79,7 @@ module RailsExecution
 
       def restore_logger!
         ::ActiveRecord::Base.logger = @model_logger
+        ::Rails.logger = @rails_logger
       end
 
     end

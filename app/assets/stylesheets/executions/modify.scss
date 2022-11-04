@@ -156,6 +156,10 @@ small, .small {
 .media-comment {
   position: relative;
 
+  img {
+    max-width: 100%;
+  }
+
   a.edit-comment {
     position: absolute;
     right: 10px;
@@ -266,4 +270,9 @@ a#click2full {
 #description-html {
   max-height: 400px;
   overflow-y: auto;
+}
+#all-tips {
+  .tip {
+    display: none;
+  }
 }

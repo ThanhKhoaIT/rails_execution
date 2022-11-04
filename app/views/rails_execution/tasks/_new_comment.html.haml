@@ -1,0 +1,8 @@
+#new-comment
+  = re_card_content do
+    = form_for comment || current_task.comments.new, url: task_comments_path(current_task), remote: true do |f|
+      = f.text_area :content, { rows: 3 }
+      .mt-3
+        .text-start.text-danger= alert
+        .text-end= f.submit 'Comment', class: 'btn btn-outline-success'
+

@@ -1,0 +1,6 @@
+- if @new_comment.errors.empty?
+  window.location.href = '#{task_path(current_task)}';
+- else
+  $("#new-comment").replaceWith("#{j render(partial: 'rails_execution/tasks/new_comment', locals: { comment: @new_comment, alert: @alert })}");
+  hljs.highlightAll();
+  window.comments.initAddNewComment('comment_content');

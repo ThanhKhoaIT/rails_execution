@@ -1,8 +1,4 @@
-= re_card_content do
-  = form_for new_comment || current_task.comments.new, url: task_comments_path(current_task) do |f|
-    = f.text_area :content, { rows: 3 }
-    .mt-3.text-end= f.submit 'Comment', class: 'btn btn-outline-success'
-
+= render partial: 'new_comment', locals: { comment: (new_comment || current_task.comments.new) }
 = render current_task.comments.ascending
 
 :javascript
