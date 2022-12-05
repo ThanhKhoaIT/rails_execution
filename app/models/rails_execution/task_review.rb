@@ -11,4 +11,6 @@ class RailsExecution::TaskReview < RailsExecution::AppModel
     rejected: 'rejected',
   }, _prefix: :is
 
+  scope :checked, -> { where(status: [:approved, :rejected]) }
+
 end

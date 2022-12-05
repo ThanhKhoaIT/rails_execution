@@ -31,6 +31,7 @@ module RailsExecution
 
       if @task.save
         @task.add_files(params[:attachments]&.permit!.to_h, current_owner) if ::RailsExecution.configuration.file_upload
+        ::RailsExecution.configuration.notifier.new(@task).after_create
         flash[:notice] = 'Create the request is successful!'
         redirect_to action: :index
       else
@@ -65,6 +66,7 @@ module RailsExecution
 
       if current_task.update(status: :closed)
         current_task.activities.create(owner: current_owner, message: 'Closed the task')
+        ::RailsExecution.configuration.notifier.new(current_task).after_close
         redirect_to(action: :show) and return
       else
         flash[:alert] = "Has problem when close this Task: #{current_task.errors.full_messages.join(', ')}"
@@ -82,6 +84,10 @@ module RailsExecution
       raise(::RailsExecution::AccessDeniedError, 'Edit task') unless can_edit_task?(current_task)
 
       @task = current_task
+      old_script = @task.script
+      old_reviewer_ids = @task.task_reviews.pluck(:owner_id)
+      checked_owner_ids = @task.task_reviews.checked.pluck(:owner_id)
+
       update_data = {
         title: params.dig(:task, :title),
         description: params.dig(:task, :description),
@@ -94,6 +100,8 @@ module RailsExecution
       if @task.update(update_data)
         @task.add_files(params[:attachments]&.permit!.to_h, current_owner) if ::RailsExecution.configuration.file_upload
         @task.activities.create(owner: current_owner, message: 'Updated the Task')
+        ::RailsExecution.configuration.notifier.new(@task).after_update_script(current_owner, checked_owner_ids) if old_script != @task.script
+        ::RailsExecution.configuration.notifier.new(@task).after_assign_reviewers(current_owner, @task.task_reviews.reload.pluck(:owner_id) - old_reviewer_ids)
         redirect_to action: :show
       else
         render action: :edit
@@ -115,6 +123,7 @@ module RailsExecution
     def reopen
       if current_task.update(status: :created)
         current_task.activities.create(owner: current_owner, message: 'Re-opened the Task')
+        ::RailsExecution.configuration.notifier.new(current_task).after_reopen
         flash[:notice] = 'Your task is re-opened'
       else
         flash[:alert] = "Re-open is failed: #{current_task.errors.full_messages.join(', ')}"
@@ -124,6 +133,7 @@ module RailsExecution
 
     def reject
       if ::RailsExecution::Services::Approvement.new(current_task, reviewer: current_owner).reject
+        ::RailsExecution.configuration.notifier.new(current_task).after_reject(current_owner)
         flash[:notice] = 'Your decision is updated!'
       else
         flash[:alert] = "Your decision is can't update!"
@@ -133,6 +143,7 @@ module RailsExecution
 
     def approve
       if ::RailsExecution::Services::Approvement.new(current_task, reviewer: current_owner).approve
+        ::RailsExecution.configuration.notifier.new(current_task).after_approve(current_owner)
         flash[:notice] = 'Your decision is updated!'
       else
         flash[:alert] = "Your decision is can't update!"
@@ -150,8 +161,10 @@ module RailsExecution
       if execute_service.call
         current_task.update(status: :completed)
         current_task.activities.create(owner: current_owner, message: 'Execute: The task is completed')
+        ::RailsExecution.configuration.notifier.new(current_task).after_execute_success(current_owner)
         flash[:notice] = 'This task is executed'
       else
+        ::RailsExecution.configuration.notifier.new(current_task).after_execute_fail(current_owner)
         flash[:alert] = "Sorry!!! This task can't execute right now"
       end
 
@@ -183,7 +196,7 @@ module RailsExecution
     helper_method :task_attachment_files
 
     def reviewing_accounts
-      @reviewing_accounts ||= current_task.task_reviews
+      @reviewing_accounts ||= current_task.task_reviews.preload(:owner)
     end
     helper_method :reviewing_accounts
 

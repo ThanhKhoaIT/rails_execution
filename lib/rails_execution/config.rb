@@ -44,6 +44,9 @@ module RailsExecution
     # Paging
     attr_accessor :per_page
 
+    # Notify
+    attr_accessor :notifier
+
     def initialize
       self.solo_mode = true
 
@@ -67,6 +70,8 @@ module RailsExecution
 
       self.logging = -> (_log_file, _task) { }
       self.logging_files = -> (_task) { [] }
+
+      self.notifier = ::RailsExecution::Services::Notifier
     end
 
   end

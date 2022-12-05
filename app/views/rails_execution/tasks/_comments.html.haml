@@ -1,5 +1,5 @@
 = render partial: 'new_comment', locals: { comment: (new_comment || current_task.comments.new) }
-= render current_task.comments.ascending
+= render current_task.comments.ascending.preload(:owner)
 
 :javascript
   hljs.highlightAll();

@@ -60,4 +60,7 @@ RailsExecution.configuration do |config|
   # Paging
   # config.per_page = 30 # Default: 20
 
+  # Notify
+  # config.notifier = ::RailsExecution::Services::Notifier
+
 end
