@@ -9,6 +9,7 @@ RailsExecution::Engine.routes.draw do
 
   resources :tasks do
     member do
+      get :fork
       patch :reopen
       patch :reject
       patch :approve

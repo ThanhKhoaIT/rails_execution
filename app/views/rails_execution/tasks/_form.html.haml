@@ -1,4 +1,4 @@
-= form_for task, html: { enctype: 'multipart/form-data' } do |f|
+= form_for task, method: task.new_record? ? :post : :patch, html: { enctype: 'multipart/form-data' } do |f|
   .row
     - if task.errors.any?
       .col-12.text-danger.small.mt-3= task.errors.full_messages.join("\n")

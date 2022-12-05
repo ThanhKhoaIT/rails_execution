@@ -12,6 +12,7 @@ window.comments.clickEditComment = function(el) {
     status: false,
     maxHeight: '150px',
     showIcons: ['code'],
+    spellChecker: false,
     placeholder: 'Type your comment here...',
     renderingConfig: {
       codeSyntaxHighlighting: true,
@@ -24,6 +25,7 @@ window.comments.initAddNewComment = function(id) {
     status: false,
     maxHeight: '100px',
     showIcons: ['code'],
+    spellChecker: false,
     placeholder: 'Type your comment here...',
     renderingConfig: {
       codeSyntaxHighlighting: true,

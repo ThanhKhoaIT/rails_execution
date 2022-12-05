@@ -4,6 +4,10 @@
   - elsif current_task.is_closed? && can_create_task?
     = link_to 'Re-Open', reopen_task_path(current_task), class: 'btn btn-outline-info', method: :patch, data: { confirm: 'Are you sure?' }
 
+  - if can_create_task?
+    = link_to fork_task_path(current_task), class: 'btn btn-outline-info ms-1 me-2' do
+      %i.bi.bi-diagram-2
+      Fork
   - if can_edit_task?(current_task)
     = link_to 'Edit', edit_task_path(current_task), class: 'btn btn-outline-warning me-2'
 

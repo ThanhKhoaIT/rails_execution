@@ -34,7 +34,7 @@ module RailsExecution
       end
 
       def acceptable_file_types
-        ::RailsExecution.configuration.acceptable_file_types.values
+        ::RailsExecution.configuration.acceptable_file_types.values.flatten
       end
 
     end

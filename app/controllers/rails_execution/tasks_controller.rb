@@ -38,6 +38,22 @@ module RailsExecution
       end
     end
 
+    def fork
+      raise(::RailsExecution::AccessDeniedError, 'Fork task') unless can_create_task?
+
+      @task = ::RailsExecution::Task.new({
+        status: :created,
+        owner_id: current_owner&.id,
+        owner_type: ::RailsExecution.configuration.owner_model.to_s,
+        title: current_task.title,
+        description: current_task.description,
+        script: current_task.script,
+      })
+      @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(@task.script).call ? 'good' : 'bad'
+
+      render action: :new
+    end
+
     def show
     end
 
