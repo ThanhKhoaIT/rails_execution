@@ -119,3 +119,68 @@ Default value: `20`
 ```ruby
   config.per_page = 10
 ```
+
+#### Pro-tips
+##### Logging
+- In editor, you can call the `log` method with `message` to log the message to logfile
+
+  Example:
+  ```ruby
+  log('Read upload file successful')
+  ```
+  Output:
+  ```
+  ==================== Wed, 22 Mar 2023 00:31:48
+  Read upload file successful
+  ```
+
+  And within the label liked it
+  ```ruby
+  log('Success', 'Read upload file')
+  ```
+  Output:
+  ```
+  ==================== Success
+  Read upload file
+  ```
+
+##### Show object Information
+
+- If you want to show the object information in loop or in the step by step, you can use the `info` method to show **Model name** and **id**.
+  ```ruby
+  ids = [1, 2]
+  Product.where(id: ids).each do |product|
+    info(product)
+    # Your code to process the product
+  end
+  ```
+  
+  Output: 
+  ```
+  ==================== Product#1
+  ==================== Product#2
+  ```
+
+##### Force to stop the process
+  If you want to add the message to log and **STOP** process, you can use the `error!` method
+
+Example:
+  ```ruby
+  error!('Bad-data', 'Unmatched value!') if var_x != var_y
+  ```
+  Output:
+  ```
+  ==================== Bad-data
+  Unmatched value!
+  ==================== Rolling back...
+  ```
+OR you can use the `stop!` method to Stop the process
+
+Example:
+```ruby
+stop!
+```
+or
+```ruby
+stop!('bad-data')
+```

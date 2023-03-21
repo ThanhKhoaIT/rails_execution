@@ -33,15 +33,17 @@ module RailsExecution
       attr_reader :task
 
       def save_to_tempfile(file_name, url)
-        file_extension = URI(url).path.split('.').last
-        file_extension = ".#{file_extension}" if file_extension
-        tmp_file = Tempfile.new([file_name, file_extension])
-        tmp_file.binmode
-        open(url) do |url_file|
-          tmp_file.write(url_file.read)
-        end
+        file = open(url)
+        return file if file.is_a?(Tempfile)
 
-        return tmp_file
+        raise "Unsupported the Filetype #{file.class.name}" unless file.is_a?(StringIO)
+
+        file_extension = file.base_uri.path.split('.').last
+        file_extension = ".#{file_extension}" if file_extension
+        tempfile = Tempfile.new([file_name, file_extension])
+        tempfile.binmode
+        tempfile.write(file.string)
+        tempfile
       end
 
     end

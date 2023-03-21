@@ -6,6 +6,22 @@
       Use
       %code Rails.logger.info 'message...'
       to add a message into log file
+    %span.tip
+      Use
+      %code info(object)
+      to add a Object info into log file
+    %span.tip
+      Use
+      %code log('Tag', 'message...')
+      to add a message into log file
+    %span.tip
+      Use
+      %code error!('Tag', 'message...')
+      to Stop the execution with the message and Tag in log file
+    %span.tip
+      Use
+      %code stop!('message...')
+      to Stop the execution with the message
     - if RailsExecution.configuration.file_upload
       %span.tip
         Call
