@@ -43,6 +43,8 @@ module RailsExecution
         tempfile = Tempfile.new([file_name, file_extension])
         tempfile.binmode
         tempfile.write(file.string)
+        tempfile.rewind
+        tempfile.close
         tempfile
       end
 
