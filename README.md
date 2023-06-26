@@ -113,6 +113,34 @@ And list the logfiles on Task page
   end
 ```
 
+In case you want to render logs more fancy in the view, you need to return list of file and created_at
+```ruby
+  config.logging_files = lambda do |task|
+    LoggerModel.where(task: task).map do |log|
+      [log.file.expiring_url(30.minutes.to_i), log.created_at]
+    end
+  end
+```
+
+
+#### Enable Task Schedule
+Depend on which gem you use to schedule a job you need to modify the block inside lambda function to invoke `::RailsExecution::Services::TaskScheduler.call(task_id)`
+
+In this case `Sidekiq` is used with option `delay_until` and set to run at `scheduled_at`
+
+```ruby
+  config.task_schedulable = true
+  config.task_scheduler = ->(scheduled_at, task_id) { ::RailsExecution::Services::TaskScheduler.delay_until(scheduled_at).call(task_id) }
+  config.scheduled_task_remover = ->(task_id) { Sidekiq::ScheduledSet.new.find_job(jid).delete }
+```
+
+#### Enable Task Background
+Depend on which gem you use to run background job you need to modify the block inside lambda function to invoke `::RailsExecution::Services::BackgroundExecution.call(task_id)`
+```ruby
+  config.task_background = true
+  config.task_background_executor = ->(task_id) { ::RailsExecution::Services::BackgroundExecution.delay.call(task_id) }
+```
+
 #### Others
 To change the Per page of the tasks list.
 Default value: `20`

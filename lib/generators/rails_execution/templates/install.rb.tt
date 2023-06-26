@@ -3,16 +3,26 @@ class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version
   def change
     create_table :rails_execution_tasks, force: true do |t|
       t.timestamps null: false
+      t.scheduled_at, :datetime
       t.column :title, :string, null: false
       t.column :status, :string, null: false
       t.column :syntax_status, :string, default: 'bad'
       t.column :description, :text
       t.column :script, :text
       t.column :owner_id, :integer
+      t.string "repeat_mode", default: "none"
       t.column :owner_type, :string
     end
     add_index :rails_execution_tasks, :status
     add_index :rails_execution_tasks, [:owner_id, :owner_type], name: :owner_index
+
+    create_table :rails_execution_labels do |t|
+      t.timestamps
+      t.string :name
+    end
+
+    add_index :rails_execution_labels, :name, unique: true
+
 
     create_table :rails_execution_comments, force: true do |t|
       t.timestamps null: false
@@ -43,6 +53,16 @@ class <%= migration_class_name %> < ActiveRecord::Migration<%= migration_version
     end
     add_index :rails_execution_task_reviews, :task_id
     add_index :rails_execution_task_reviews, [:owner_id, :owner_type], name: :owner_index
+
+    create_table :rails_execution_task_labels, force: true do |t|
+      t.timestamps null: false
+      t.column :task_id, :integer, null: false
+      t.column :label_id, :integer, null: false
+    end
+
+    add_index :rails_execution_task_labels, :task_id
+    add_index :rails_execution_task_labels, :label_id
+
   end
 
 end

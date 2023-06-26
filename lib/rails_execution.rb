@@ -11,8 +11,12 @@ require 'rails_execution/services/paging'
 require 'rails_execution/services/executor'
 require 'rails_execution/services/notifier'
 require 'rails_execution/services/execution'
+require 'rails_execution/services/background_execution'
 require 'rails_execution/services/approvement'
 require 'rails_execution/services/syntax_checker'
+require 'rails_execution/services/task_scheduler'
+require 'rails_execution/services/create_scheduled_job'
+require 'rails_execution/services/remove_scheduled_job'
 
 module RailsExecution
 
