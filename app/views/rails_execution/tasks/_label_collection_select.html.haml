@@ -1,0 +1,4 @@
+= select_tag 'task_label_ids', options_for_select(normal_labels.map { |l| [l.name, l.id] }, selected_label_ids), { multiple: true, class: 'select2 col-12' }
+
+:javascript
+  $('#task_label_ids').select2({});

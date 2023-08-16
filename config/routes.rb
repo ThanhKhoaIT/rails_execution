@@ -14,6 +14,7 @@ RailsExecution::Engine.routes.draw do
       patch :reject
       patch :approve
       patch :execute
+      patch :execute_in_background
     end
 
     collection do
@@ -23,5 +24,5 @@ RailsExecution::Engine.routes.draw do
 
     resources :comments, only: [:create, :update, :destroy]
   end
-
+  resources :labels, only: [:create]
 end

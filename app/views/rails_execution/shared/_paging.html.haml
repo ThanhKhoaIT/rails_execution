@@ -1,7 +1,7 @@
 - return if total_pages <= 1
 - original_params = params.permit!.to_h
 
-- gap_number = 2
+- gap_number = 1
 - page_numbers = (1..total_pages).to_a
 - begin_paging = (1..(1 + gap_number)).to_a
 - middle_paging = page_numbers & ((page - gap_number)..(page + gap_number)).to_a

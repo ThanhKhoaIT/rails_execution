@@ -1,7 +1,7 @@
 = form_for task, method: task.new_record? ? :post : :patch, html: { enctype: 'multipart/form-data' } do |f|
   .row
     - if task.errors.any?
-      .col-12.text-danger.small.mt-3= task.errors.full_messages.join("\n")
+      .col-12.text-danger.mt-3= task.errors.full_messages.join("\n")
 
     .col
       .mb-3.mt-4= f.text_field :title, { class: 'form-control', placeholder: 'Title', required: true }
@@ -15,7 +15,18 @@
               = f.collection_select :task_review_ids, reviewers, :id, :name, { selected: task.reviewer_ids }, { multiple: true, class: 'select2 col-12' }
             - else
               %p.small.text-muted Nobody can add
-
+        %h5.mb-2.mt-4.section-title
+          Labels
+          %a{href: "#", 'data-bs-target': '#newLabelModalForm', 'data-bs-toggle': "modal"} new
+        #labels.mb-3
+          = render partial: 'label_collection_select', locals: { selected_label_ids: task.label_ids }
+        - if RailsExecution.configuration.task_schedulable
+          %h5.mb-2.mt-4.section-title
+            Scheduler
+            %i.bi.bi-clock-fill.me-1.pointer-events
+            %a{:href => "#", id: "clear-schedule-btn"} clear
+          = f.datetime_local_field :scheduled_at, class: "form-control", placeholder: "Select Datetime"
+          = f.select :repeat_mode, options_for_select(task.repeat_mode_select_options.invert, f.object.repeat_mode), {}, class: "form-control", disabled: !task.scheduled_at?
         - if RailsExecution.configuration.file_upload
           %h5.mb-2.mt-4.section-title Attachment files
           %ul.list-unstyled.mt-3
@@ -53,3 +64,35 @@
     = f.submit (task.new_record? ? 'Create' : 'Update'), class: 'btn btn-success'
 
 = render partial: 'form_scripts', locals: { task: task }
+= render partial: 'new_label_modal_form'
+
+:javascript
+  $(document).ready(function() {
+    $('#task_scheduled_at').change(function() {
+      var scheduledAtValue = $(this).val();
+      var modeSelect = $('#task_repeat_mode');
+      modeSelect.prop('disabled', false);
+
+      var scheduledDate = new Date(scheduledAtValue);
+      var currentMinutes = scheduledDate.getMinutes().toString().padStart(2, '0');
+      var currentHours = scheduledDate.getHours().toString().padStart(2, '0');
+      var currentDayOfWeek = scheduledDate.toLocaleDateString('en-US', { weekday: 'long' });
+      var currentDayOfMonth = scheduledDate.getDate();
+      var currentMonth = scheduledDate.toLocaleDateString('en-US', { month: 'long' });
+
+      modeSelect.find('option[value="hourly"]').text(`Hourly at minute ${scheduledDate.getMinutes()}`);
+      modeSelect.find('option[value="daily"]').text(`Daily at ${currentHours}:${currentMinutes}`);
+      modeSelect.find('option[value="weekly"]').text(`Weekly on ${currentDayOfWeek} at ${currentHours}:${currentMinutes}`);
+      modeSelect.find('option[value="monthly"]').text(`Monthly on ${currentDayOfMonth} at ${currentHours}:${currentMinutes}`);
+      modeSelect.find('option[value="annually"]').text(`Annually on  ${currentMonth} ${currentDayOfMonth} at ${currentHours}:${currentMinutes}`);
+      modeSelect.find('option[value="weekdays"]').text(`Every weekday (Monday to Friday) at ${currentHours}:${currentMinutes}`);
+    });
+
+    $('#clear-schedule-btn').on('click', function() {
+      $('#task_scheduled_at').val('');
+
+      var modeSelect = $('#task_repeat_mode');
+      modeSelect.val('none');
+      modeSelect.prop('disabled', true);
+    });
+  });

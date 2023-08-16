@@ -35,6 +35,14 @@ RailsExecution.configuration do |config|
   #   '.csv': ['text/csv', 'text/plain'],
   # }
 
+  # config.task_schedulable = true
+  # config.task_scheduler = ->(scheduled_at, task_id) { }
+  # config.scheduled_task_remover = ->(task_id) { }
+
+  # config.task_background = true
+  # config.task_background_executor = ->(task_id) { }
+
+
   # Logger
   # Using Paperclip
   # config.logging = lambda do |log_file, task|

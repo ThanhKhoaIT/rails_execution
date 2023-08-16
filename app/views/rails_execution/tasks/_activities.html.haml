@@ -2,12 +2,14 @@
   = re_card_content do
     %h5.section-title Logs
     %ul.list-unstyled#task-logs
-      - task_logs.each do |task_log|
-        %li.fs-13.row.mb-3
-          .col.text-muted
-            %i.bi.bi-journal-text
+      - task_logs.each do |task_log, created_at|
+        %li.row
+          .col
             = re_get_file_name(task_log)
-          .col-3.text-end= link_to 'Download', task_log, target: :_blank, class: 'text-muted click2download'
+            .mt-1= link_to 'Download', task_log, target: :_blank, class: 'text-muted click2download'
+          .col-3.text-end.activitiy-time
+            %span.fs13px.text-muted= created_at&.strftime('%Y/%m/%d')
+            %p.text-muted= created_at&.strftime('%H:%M')
 
 = re_card_content id: 'activities-section' do
   %h5.section-title Activities

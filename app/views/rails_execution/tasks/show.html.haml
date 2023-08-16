@@ -16,6 +16,7 @@
     = re_card_content do
       %h6.border-bottom.pb-2.mb-0
         = current_task.title
+        = render_task_labels(current_task)
         %span.float-end.fs-5.text-muted ##{current_task.id}
       %p.mt-3.description
         - if current_task.description.present?
@@ -35,6 +36,7 @@
         = render_user_info(current_task.owner, avatar_size: '40x40')
 
     = render partial: 'reviewers'
+    = render partial: 'schedule'
     = render partial: 'status'
     = render partial: 'actions'
     = render partial: 'activities'

@@ -35,6 +35,11 @@ module RailsExecution
     attr_accessor :file_upload
     attr_accessor :file_uploader
     attr_accessor :file_reader
+    attr_accessor :task_schedulable
+    attr_accessor :task_scheduler # lambda
+    attr_accessor :scheduled_task_remover # lambda
+    attr_accessor :task_background
+    attr_accessor :task_background_executor # lambda
     attr_accessor :acceptable_file_types
 
     # Logger
@@ -59,17 +64,25 @@ module RailsExecution
       self.acceptable_file_types = DEFAULT_FILE_TYPES
       self.file_uploader = ::RailsExecution::Files::Uploader
       self.file_reader = ::RailsExecution::Files::Reader
+
+      self.task_schedulable = false
+      self.task_scheduler = ->(_scheduled_at, _task_id) { nil }
+      self.scheduled_task_remover = ->(_task_id) { nil }
+
+      self.task_background = false
+      self.task_background_executor = ->(_task_id) { nil }
+
       self.per_page = DEFAULT_PER_PAGE
       self.reviewers = -> { [] }
 
-      self.task_creatable = -> (_user) { true }
-      self.task_editable = -> (_user, _task) { true }
-      self.task_closable = -> (_user, _task) { true }
-      self.task_approvable = -> (_user, _task) { true }
-      self.task_executable = -> (_user, _task) { true }
+      self.task_creatable = ->(_user) { true }
+      self.task_editable = ->(_user, _task) { true }
+      self.task_closable = ->(_user, _task) { true }
+      self.task_approvable = ->(_user, _task) { true }
+      self.task_executable = ->(_user, _task) { true }
 
-      self.logging = -> (_log_file, _task) { }
-      self.logging_files = -> (_task) { [] }
+      self.logging = ->(_log_file, _task) {}
+      self.logging_files = ->(_task) { [] }
 
       self.notifier = ::RailsExecution::Services::Notifier
     end

@@ -1,0 +1,22 @@
+- if current_task.scheduled_at?
+  = re_card_content do
+    - if current_task.repeat_none?
+      %h5.section-title
+        Scheduled at
+        %i.bi.bi-clock-fill.me-2 :
+        = current_task.scheduled_at.strftime("%Y-%m-%d %H:%M")
+        - if current_task.scheduled_at.past?
+          %i.text-danger (EXPIRED)
+    - if current_task.repeatable?
+      %h5.section-title
+        Repeat mode:
+        %i.bi.bi-arrow-repeat.me-2 :
+        = current_task.repeat_mode_select_options[current_task.repeat_mode]
+        %h5.section-title
+          Next time at
+          %i.bi.bi-clock-fill.me-2 :
+          = current_task.next_time_at
+    - if current_task.jid
+      %h5.section-title
+        JID:
+        = current_task.jid

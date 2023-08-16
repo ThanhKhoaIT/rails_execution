@@ -2,7 +2,9 @@
   = re_card_content do
     .text-center
       - if can_execute_task?(current_task)
-        = link_to 'Execute NOW!!!', execute_task_path(current_task), class: 'btn btn-primary', method: :patch, data: { confirm: 'Are you sure?' }
+        = link_to 'Execute NOW!!!', execute_task_path(current_task), class: 'btn btn-block btn-primary', method: :patch, data: { confirm: 'Are you sure?' }
+        - if RailsExecution.configuration.task_background
+          = link_to 'Execute in background!', execute_in_background_task_path(current_task), class: 'btn btn-block btn-secondary', method: :patch, data: { confirm: 'Are you sure?' }
       - else
         %p.text-danger.mb-0.fw-bold
           %i.bi.bi-x-octagon.me-1

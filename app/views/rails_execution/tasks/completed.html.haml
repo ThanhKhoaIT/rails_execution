@@ -1,5 +1,6 @@
 = re_card_content do
   %h5.section-title Completed
+  = render partial: 'advanced_filter'
   %ul.list-unstyled
     - if @tasks.empty?
       %li

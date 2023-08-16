@@ -1,5 +1,6 @@
 module RailsExecution
   module RenderingHelper
+    AVATAR_CLASS = 'bd-placeholder-img flex-shrink-0 me-2 rounded'
 
     def render_user_info(user, avatar_size: '40x40')
       content_tag :div, class: 'user-info' do
@@ -9,16 +10,16 @@ module RailsExecution
     end
 
     def render_owner_avatar(owner, size: '32x32')
-      return nil if owner.blank?
+      return image_tag(asset_path('executions/robot.png'), size: size, class: AVATAR_CLASS) if owner.blank?
 
       avatar_url = RailsExecution.configuration.owner_avatar.call(owner)
       return nil if avatar_url.blank?
 
-      image_tag avatar_url, size: size, class: 'bd-placeholder-img flex-shrink-0 me-2 rounded'
+      image_tag avatar_url, size: size, class: AVATAR_CLASS
     end
 
     def render_owner_name(owner)
-      return nil if owner.blank?
+      return 'System' if owner.blank?
       return nil if RailsExecution.configuration.owner_name_method.blank?
 
       content_tag :span, owner.public_send(RailsExecution.configuration.owner_name_method)
@@ -35,6 +36,20 @@ module RailsExecution
         content_tag :div, class: 'alert alert-success align-items-center' do
           concat content_tag(:i, nil, class: 'bi bi-check-circle mr-2')
           concat content_tag(:span, message, class: 'ms-2')
+        end
+      end
+    end
+
+    def render_task_labels(task)
+      # to_a and sort_by instead of .order for avoid N+1 query to sort task labels for each task
+      task.labels.to_a.sort_by(&:name).reduce(''.html_safe) do |result, label|
+        case label.name
+        when 'repeat'
+          result + content_tag(:span, "repeat: #{task.repeat_mode}", class: 'badge rounded-pill mx-1 label-tag bg-success', data: { id: label.id })
+        when 'scheduled'
+          result + content_tag(:span, 'scheduled', class: 'badge rounded-pill mx-1 label-tag bg-info', data: { id: label.id })
+        else
+          result + content_tag(:span, label.name, class: 'badge rounded-pill mx-1 label-tag bg-secondary', data: { id: label.id })
         end
       end
     end
@@ -86,6 +101,7 @@ module RailsExecution
         rejected: 'danger',
         approved: 'success',
         reviewing: 'secondary',
+        processing: 'warning',
         completed: 'success',
       }[text] || 'secondary'
     end
