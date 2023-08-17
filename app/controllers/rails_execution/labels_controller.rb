@@ -11,7 +11,7 @@ module RailsExecution
         updated_html = render_to_string(partial: 'rails_execution/tasks/label_collection_select', locals: { selected_label_ids: selected_label_ids })
         render json: { updated_html: updated_html }, status: 200
       else
-        render json: @label.errors, status: 422
+        render json: @label.errors.full_messages.join(', '), status: 422
       end
     end
 

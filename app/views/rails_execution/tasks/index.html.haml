@@ -8,6 +8,6 @@
           %i.bi.bi-journal-code.me-2
           Welcome to add new Task
     - else
-      = render partial: 'task', collection: @tasks
+      = render partial: 'task', collection: @tasks, locals: { comments_count_by_task_id: @comments_count_by_task_id }
 
 = re_render_paging(@tasks)

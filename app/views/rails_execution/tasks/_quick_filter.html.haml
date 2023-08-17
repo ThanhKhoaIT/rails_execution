@@ -1,10 +1,18 @@
-.d-flex.flex-row-reverse.mt-2
-  .ms-2
-    %button.btn.quick-filter-btn{ type: 'button', 'data-target': '#order_by_recently_updated', class: params[:order_by_recently_updated] == '1' ? 'btn-dark' : 'btn-outline-dark'} Recently Updated
-    = hidden_field_tag :order_by_recently_updated, params[:order_by_recently_updated]
-  .m-0
-    %button.btn.quick-filter-btn{ type: 'button', 'data-target': '#filter_only_my_tasks', class: params[:filter_only_my_tasks] == '1' ? 'btn-dark' : 'btn-outline-dark' } Only My Tasks
-    = hidden_field_tag :filter_only_my_tasks, params[:filter_only_my_tasks]
+.d-flex.mt-2
+  %button.btn.quick-filter-btn{ type: 'button', 'data-target': '#my_task' }
+    - if params[:my_task] == '1'
+      %i.bi.bi-check-square
+    - else
+      %i.bi.bi-square
+    Only my tasks
+    = hidden_field_tag :my_task, params[:my_task]
+  %button.btn.quick-filter-btn{ type: 'button', 'data-target': '#recently_updated' }
+    - if params[:recently_updated] == '1'
+      %i.bi.bi-sort-numeric-down-alt
+    - else
+      %i.bi.bi-sort-numeric-down
+    Last updated
+    = hidden_field_tag :recently_updated, params[:recently_updated]
 
 :javascript
   $(document).ready(function() {
