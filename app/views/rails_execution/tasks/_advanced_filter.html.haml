@@ -1,53 +1,59 @@
 = form_tag nil, method: 'get', id:'filter-form' do
-  .row.d-flex.flex-row-reverse
-    .col-md-2
-      .input-group.h-100
-        = text_field_tag :keyword, params[:keyword], placeholder: "Keyword", class: "form-control"
-        %button.input-group-text
-          %i.bi.bi-search
-
-    .col-md-2
-      .filter-select-container.border.rounded-3.h-100{"data-target": "#owner-select-dropdown", "focus-target": "#owner_search_input"}
-        - if current_filtered_owner
-          = render_user_info(current_filtered_owner)
-        - else
-          = image_tag(asset_path('executions/robot.png'), size: '35x35', class: asset_path('executions/robot.png'), size: '40x40', class: ::RailsExecution::RenderingHelper::AVATAR_CLASS)
-          Owner
-        #owner-select-dropdown.dropdown-menu.pt-0.mx-0.rounded-3.shadow.overflow-hidden{style: "width: 280px;"}
-          .p-2.mb-2.bg-light.border-bottom
-            = text_field_tag :owner_search_input, nil, autocomplete: "false", placeholder: "Type to filter...", class: "form-control", type: "search"
-            = hidden_field_tag :owner_id, params[:owner_id]
-          %ul.owner-list.list-unstyled.mb-0.overflow-auto{ style: "height: 230px;" }
-            - if params[:owner_id].present?
-              %li{ data: { email: '', name: '', id: '', 'input-target': '#owner_id'}, class: 'filter-select-value'}
-                %a.dropdown-item.d-flex.align-items-center.gap-2.py-2{href: "#"}
-                  = image_tag(asset_path('executions/user-remove-icon.png'), size: '40x40', class: ::RailsExecution::RenderingHelper::AVATAR_CLASS)
-            - filter_owners.each do |owner|
-              %li{ data: { email: owner.email, name: owner.name, id: owner.id, 'input-target': '#owner_id'}, class: 'filter-select-value'}
-                %a.dropdown-item.d-flex.align-items-center.gap-2.py-2{href: "#"}
-                  = render_user_info(owner, avatar_size: '40x40')
-
-    .col-md-2
-      .filter-select-container.border.rounded-3.h-100.text-center{"data-target": "#label-select-dropdown", "focus-target": "#label_search_input"}
-        .p-1
-        = current_filtered_label ? current_filtered_label.name : 'Label'
-        %i.bi.bi-tag
-        #label-select-dropdown.dropdown-menu.pt-0.mx-0.rounded-3.shadow.overflow-hidden{style: "width: 280px;"}
-          .p-2.mb-2.bg-light.border-bottom
-            = text_field_tag :label_search_input, nil, autocomplete: "false", placeholder: "Type to filter...", class: "form-control", type: "search"
-            = hidden_field_tag :label_id, params[:label_id]
-          %ul.label-list.list-unstyled.mb-0.overflow-auto{ style: "height: 230px;" }
-            - if params[:label_id].present?
-              %li{ data: { name: '', id: '', 'input-target': '#label_id'}, class: 'filter-select-value'}
-                %a.dropdown-item.d-flex.align-items-center.gap-2.py-2{href: "#"}
-                  %i.bi.bi-dash-circle
-            - filter_labels.each do |label|
-              %li{ data: { name: label.name, id: label.id, 'input-target': '#label_id'}, class: 'filter-select-value'}
-                %a.dropdown-item.d-flex.align-items-center.gap-2.py-2{href: "#"}
-                  %i.bi.bi-tag
-                  = label.name
-
-  = render partial: 'quick_filter'
+  .row.d-flex.g-2.pb-4.border-bottom
+    .col-md-6= render partial: 'quick_filter'
+    .col-md-6
+      .row.d-fex.justify-content-end
+        .col-auto#label-filter
+          .filter-select-container.h-100.text-center{'data-target': '#label-select-dropdown', 'focus-target': '#label_search_input'}
+            .p-2.fs-6
+              - if current_filtered_label
+                = render_label(current_filtered_label)
+              - else
+                %i.bi.bi-tag
+                Label
+            #label-select-dropdown.dropdown-menu.pt-0.mx-0.rounded-3.shadow.overflow-hidden
+              .p-2.mb-2.bg-light.border-bottom
+                = text_field_tag :label_search_input, nil, autocomplete: "false", placeholder: "Type to filter...", class: "form-control", type: "search"
+                = hidden_field_tag :label_id, params[:label_id]
+              %ul.label-list.list-unstyled.mb-0.overflow-auto
+                - if params[:label_id].present?
+                  %li{ data: { name: '', id: '', 'input-target': '#label_id'}, class: 'filter-select-value'}
+                    = link_to '#', class: 'dropdown-item d-flex align-items-center gap-2 py-2 text-danger' do
+                      %i.bi.bi-dash-circle
+                      Remove filter
+                - filter_labels.each do |label|
+                  %li{ data: { name: label.name, id: label.id, 'input-target': '#label_id'}, class: 'filter-select-value'}
+                    %a.dropdown-item.d-flex.align-items-center.gap-2.py-2{href: "#"}
+                      %i.bi.bi-tag.color.label-colors.bg-none{ class: "lc-#{label.color}" }
+                      %span.rounded-pill.badge.label-tag.label-colors{ class: "lc-#{label.color}" }= label.name
+        .col-auto#owner-filter
+          .filter-select-container{"data-target": "#owner-select-dropdown", "focus-target": "#owner_search_input"}
+            .p-2.fs-6
+              - if current_filtered_owner
+                = render_user_info(current_filtered_owner)
+              - else
+                %i.bi.bi-person
+                %span Owner
+            #owner-select-dropdown.dropdown-menu.pt-0.mx-0.rounded-3.shadow.overflow-hidden{style: "width: 280px;"}
+              .p-2.mb-2.bg-light.border-bottom
+                = text_field_tag :owner_search_input, nil, autocomplete: "false", placeholder: "Type to filter...", class: "form-control", type: "search"
+                = hidden_field_tag :owner_id, params[:owner_id]
+              %ul.owner-list.list-unstyled.mb-0.overflow-auto{ style: "height: 230px;" }
+                - if params[:owner_id].present?
+                  %li{ data: { email: '', name: '', id: '', 'input-target': '#owner_id'}, class: 'filter-select-value'}
+                    %a.dropdown-item.d-flex.align-items-center.gap-2.text-danger{href: "#"}
+                      %span.p1-2
+                        %i.bi.bi-person-dash.fs-2
+                      %span.ms-1.fs-6 Remove filter
+                - filter_owners.each do |owner|
+                  %li{ data: { email: owner.email, name: owner.name, id: owner.id, 'input-target': '#owner_id'}, class: 'filter-select-value'}
+                    %a.dropdown-item.d-flex.align-items-center.gap-2{href: "#"}
+                      = render_user_info(owner, avatar_size: '40x40')
+        .col-auto#search-input
+          .input-group.h-100
+            = text_field_tag :keyword, params[:keyword], placeholder: "Keyword", class: "form-control"
+            %button.input-group-text
+              %i.bi.bi-search
 
 :javascript
   $(document).ready(function() {

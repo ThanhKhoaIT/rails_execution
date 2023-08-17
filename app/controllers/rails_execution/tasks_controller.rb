@@ -6,8 +6,9 @@ module RailsExecution
 
     def index
       paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
-      processing_tasks = ::RailsExecution::Task.processing.includes(:owner, :comments, :labels)
+      processing_tasks = ::RailsExecution::Task.processing.preload(:owner, :labels)
       processing_tasks = ::RailsExecution::Tasks::FilterService.new(processing_tasks, params, current_owner&.id).call
+      @comments_count_by_task_id = ::RailsExecution::Comment.where(task: processing_tasks).group(:task_id).count
       @tasks = paging.call(processing_tasks)
     end
 
@@ -44,6 +45,7 @@ module RailsExecution
         description: current_task.description,
         script: current_task.script,
       })
+      @task.labels = current_task.labels
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(@task.script).call ? 'good' : 'bad'
 
       render action: :new
@@ -88,7 +90,7 @@ module RailsExecution
       update_data = {
         title: params.dig(:task, :title),
         description: params.dig(:task, :description),
-        scheduled_at: Time.zone.parse(params.dig(:task, :scheduled_at)),
+        scheduled_at: Time.zone.parse(params.dig(:task, :scheduled_at).to_s),
         repeat_mode: params.dig(:task, :repeat_mode),
       }
 
@@ -194,9 +196,11 @@ module RailsExecution
     helper_method :current_task
 
     def reviewers
-      @reviewers ||= ::RailsExecution.configuration.reviewers.call.map do |reviewer|
-        ::OpenStruct.new(reviewer)
-      end
+      return @reviewers if defined?(@reviewers)
+
+      list = ::RailsExecution.configuration.reviewers.call
+      list = list.map { |reviewer| reviewer[:id] == current_owner.id ? nil : ::OpenStruct.new(reviewer) }
+      @reviewers = list.compact
     end
     helper_method :reviewers
 

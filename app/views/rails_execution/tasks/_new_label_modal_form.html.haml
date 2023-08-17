@@ -1,16 +1,16 @@
 / Modal
 = form_tag labels_path, method: :post, id:'new-label-form', remote: true do
-  .modal.fade{"aria-hidden" => "true", "aria-labelledby" => "newLabelModalFormLabel", tabindex: "-1", id: 'newLabelModalForm'}
+  .modal.fade{'aria-hidden' => 'true', 'aria-labelledby' => 'newLabelModalFormLabel', tabindex: '-1', id: 'newLabelModalForm'}
     .modal-dialog
       .modal-content
         .modal-header
           %h5#newLabelModalFormLabel.modal-title New label
-          %button.btn-close{"aria-label" => "Close", "data-bs-dismiss" => "modal", type: "button"}
+          %button.btn-close{'aria-label' => 'Close', 'data-bs-dismiss' => 'modal', type: 'button'}
         .modal-body
-          = text_field_tag :label_name, nil, placeholder: "Label name", class: "form-control"
+          = text_field_tag :label_name, nil, placeholder: 'Label name', class: 'form-control'
         .modal-footer
-          %button.btn.btn-secondary{"data-bs-dismiss" => "modal", type: "button"} Close
-          %button.btn.btn-success Save
+          %button.btn.btn-secondary{'data-bs-dismiss' => 'modal', type: 'button'} Close
+          %button.btn.btn-primary Create
 
 :javascript
   $(document).ready(function() {

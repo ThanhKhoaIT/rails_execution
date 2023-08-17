@@ -1,0 +1,153 @@
+.label-tag {
+  cursor: pointer;
+}
+.filter-select-container .user-info img,
+.filter-select-value img.bd-placeholder-img.flex-shrink-0.me-2.rounded {
+  width: 30px;
+  height: 30px;
+}
+
+input.form-control:focus,
+input.form-control:active,
+input.form-control:hover {
+  box-shadow: none;
+}
+
+/* reviewers */
+#reviewers {
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    background-color: #FFF;
+    border-radius: 7px;
+    padding: 0px 20px 0px 7px;
+    font-size: 0.9rem;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    border-right: none;
+    left: auto;
+    right: 0px;
+    padding: 0px 7px;
+    span {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+}
+
+#labels {
+  .select2-container--default .select2-selection--multiple .select2-selection__choice {
+    overflow: visible;
+    border: none;
+    background-color: #FFF;
+    padding: 0;
+    font-size: 0.9rem;
+  }
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__remove {
+    border-right: none;
+    left: auto;
+    right: 0px;
+    padding: 0px 7px;
+    &:hover {
+      background-color: transparent;
+    }
+    span {
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: normal;
+    }
+  }
+
+  .select2-container--default .select2-selection--multiple .select2-selection__choice__display {
+    padding: 0;
+  }
+
+  .label-colors {
+    padding: 3px 23px 3px 10px;
+    border-radius: 20px;
+  }
+}
+
+.select2-results__options span.badge {
+  border-radius: 20px;
+}
+
+.select2-container--default .select2-dropdown.labeling .select2-results {
+  .select2-results__option--selected {
+    opacity: 0.3;
+    background-color: transparent !important;
+    color: #DDD;
+  }
+}
+
+.label-colors {
+  font-weight: 300;
+
+  &.label-tag {
+    padding: 5px 10px;
+  }
+
+  &.bg-none {
+    background-color: transparent !important;
+  }
+
+  &.lc-red {
+    background-color: #ffcdd2;
+    color: #f44336;
+  }
+  &.lc-pink {
+    background-color: #f8bbd0;
+    color: #e91e63;
+  }
+  &.lc-purple {
+    background-color: #e1bee7;
+    color: #9c27b0;
+  }
+  &.lc-deep-purple {
+    background-color: #d1c4e9;
+    color: #673ab7;
+  }
+  &.lc-indigo {
+    background-color: #c5cae9;
+    color: #3f51b5;
+  }
+  &.lc-blue {
+    background-color: #bbdefb;
+    color: #2196f3;
+  }
+  &.lc-light-blue {
+    background-color: #b3e5fc;
+    color: #03a9f4;
+  }
+  &.lc-cyan {
+    background-color: #e0f7fa;
+    color: #00bcd4;
+  }
+  &.lc-teal {
+    background-color: #b2dfdb;
+    color: #009688;
+  }
+  &.lc-green {
+    background-color: #c8e6c9;
+    color: #4caf50;
+  }
+  &.lc-orange {
+    background-color: #ffe0b2;
+    color: #ff9800;
+  }
+  &.lc-deep-orange {
+    background-color: #ffccbc;
+    color: #ff5722;
+  }
+  &.lc-brown {
+    background-color: #d7ccc8;
+    color: #795548;
+  }
+  &.lc-grey {
+    background-color: #f5f5f5;
+    color: #9e9e9e;
+  }
+  &.lc-blue-grey {
+    background-color: #cfd8dc;
+    color: #607d8b;
+  }
+}

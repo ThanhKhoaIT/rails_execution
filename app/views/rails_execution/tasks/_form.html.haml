@@ -14,10 +14,13 @@
             - if reviewers.any?
               = f.collection_select :task_review_ids, reviewers, :id, :name, { selected: task.reviewer_ids }, { multiple: true, class: 'select2 col-12' }
             - else
-              %p.small.text-muted Nobody can add
+              %p.small.text-muted Nobody can be added
         %h5.mb-2.mt-4.section-title
           Labels
-          %a{href: "#", 'data-bs-target': '#newLabelModalForm', 'data-bs-toggle': "modal"} new
+          .float-end
+            = link_to '#', class: 'text-primary', 'data-bs-target': '#newLabelModalForm', 'data-bs-toggle': "modal" do
+              %i.bi.bi-plus-circle.me-1
+              Add
         #labels.mb-3
           = render partial: 'label_collection_select', locals: { selected_label_ids: task.label_ids }
         - if RailsExecution.configuration.task_schedulable

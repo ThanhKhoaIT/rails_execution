@@ -40,16 +40,23 @@ module RailsExecution
       end
     end
 
+    def render_label(task_label)
+      content_tag :div do
+        concat content_tag :i, '', class: "bi bi-tag label-colors lc-#{task_label.color} bg-none"
+        concat content_tag :span, task_label.name, class: "badge rounded-pill mx-1 label-colors lc-#{task_label.color}"
+      end
+    end
+
     def render_task_labels(task)
       # to_a and sort_by instead of .order for avoid N+1 query to sort task labels for each task
       task.labels.to_a.sort_by(&:name).reduce(''.html_safe) do |result, label|
         case label.name
         when 'repeat'
-          result + content_tag(:span, "repeat: #{task.repeat_mode}", class: 'badge rounded-pill mx-1 label-tag bg-success', data: { id: label.id })
+          result + content_tag(:span, "repeat: #{task.repeat_mode}", class: "badge rounded-pill mx-1 label-tag label-colors lc-#{label.color}", data: { id: label.id })
         when 'scheduled'
-          result + content_tag(:span, 'scheduled', class: 'badge rounded-pill mx-1 label-tag bg-info', data: { id: label.id })
+          result + content_tag(:span, 'scheduled', class: "badge rounded-pill mx-1 label-tag label-colors lc-#{label.color}", data: { id: label.id })
         else
-          result + content_tag(:span, label.name, class: 'badge rounded-pill mx-1 label-tag bg-secondary', data: { id: label.id })
+          result + content_tag(:span, label.name, class: "badge rounded-pill mx-1 label-tag label-colors lc-#{label.color}", data: { id: label.id })
         end
       end
     end

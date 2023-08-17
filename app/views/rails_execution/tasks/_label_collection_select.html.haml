@@ -1,4 +1,20 @@
-= select_tag 'task_label_ids', options_for_select(normal_labels.map { |l| [l.name, l.id] }, selected_label_ids), { multiple: true, class: 'select2 col-12' }
+= select_tag 'task_label_ids', options_for_select(normal_labels.map { |l| [l.name, l.id, { color: l.color }] }, selected_label_ids), { multiple: true, class: 'select2 col-12' }
 
 :javascript
-  $('#task_label_ids').select2({});
+  $('#task_label_ids').select2({
+    dropdownCssClass: 'labeling',
+    templateSelection: function(data, container) {
+      if (data.id == '') {
+        return data.text;
+      } else {
+        return $('<span class="label-colors lc-' + $(data.element).attr('color') + '">' + data.text + '</span>');
+      }
+    },
+    templateResult: function(data, container) {
+      if (data.id == '') {
+        return data.text;
+      } else {
+        return $('<span class="badge label-colors lc-' + $(data.element).attr('color') + '">' + data.text + '</span>');
+      }
+    }
+  });
