@@ -1,6 +1,7 @@
 module RailsExecution
   module RenderingHelper
     AVATAR_CLASS = 'bd-placeholder-img flex-shrink-0 me-2 rounded'
+    TRUNCATE_FILE_NAME_LENGTH = 20
 
     def render_user_info(user, avatar_size: '40x40')
       content_tag :div, class: 'user-info' do
@@ -89,7 +90,7 @@ module RailsExecution
     end
 
     def re_get_file_name(url)
-      URI(url).path.split('/').last
+      URI(url).path.split('/').last&.truncate(TRUNCATE_FILE_NAME_LENGTH)
     end
 
     def re_badge_color(status)

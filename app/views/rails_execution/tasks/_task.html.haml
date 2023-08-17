@@ -1,20 +1,22 @@
-%li.border-bottom.d-flex.pt-2.pb-2{ class: "task-is-#{task.status}" }
-  .p-2.pt-3
-    %span.fs-4.text-muted ##{task.id}
-  .p-2
-    = link_to task_path(task) do
-      = render_owner_avatar(task.owner, size: '50x50')
-  .p-2
-    %p.mb-0.text-black
-      = link_to task_path(task), class: 'task-title' do
-        = task.title.truncate(100)
-      - if task.syntax_status_good?
-        %i.bi.bi-check2.text-success
-      - elsif task.syntax_status_bad?
-        %i.bi.bi-exclamation-octagon.text-danger
-    %span.small.text-muted created on #{time_ago_in_words(task.created_at)} by #{render_owner_name(task.owner)}
-  .p-2.ms-auto.text-end
-    = render_task_labels(task)
-    %span.comments.ps-3
-      %span.me-1= comments_count_by_task_id[task.id].to_i
-      %i.bi.bi-chat-left-dots
+%li.border-bottom.py-2{ class: "task-is-#{task.status}" }
+  .row
+    .col.d-flex
+      .p-2.pt-3
+        %span.fs-4.text-muted ##{task.id}
+      .p-2
+        = link_to task_path(task) do
+          = render_owner_avatar(task.owner, size: '50x50')
+      .p-2
+        %p.mb-0.text-black
+          = link_to task_path(task), class: 'task-title' do
+            = task.title.truncate(100)
+          - if task.syntax_status_good?
+            %i.bi.bi-check2.text-success
+          - elsif task.syntax_status_bad?
+            %i.bi.bi-exclamation-octagon.text-danger
+        %span.small.text-muted created on #{time_ago_in_words(task.created_at)} by #{render_owner_name(task.owner)}
+    .col-auto.d-flex.align-items-center= render_task_labels(task)
+    .col-auto.d-flex.align-items-center.text-end.text-muted
+      %span.comments
+        %span.me-1= comments_count_by_task[task.id].to_i
+        %i.bi.bi-chat-left-dots

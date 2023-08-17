@@ -31,23 +31,13 @@
           = f.datetime_local_field :scheduled_at, class: "form-control", placeholder: "Select Datetime"
           = f.select :repeat_mode, options_for_select(task.repeat_mode_select_options.invert, f.object.repeat_mode), {}, class: "form-control", disabled: !task.scheduled_at?
         - if RailsExecution.configuration.file_upload
-          %h5.mb-2.mt-4.section-title Attachment files
-          %ul.list-unstyled.mt-3
-            - task_attachment_files.each do |name, url|
-              %li.row.normal-text
-                .col
-                  %i.bi.fs-3.text-muted{ class: "bi-file-text bi-filetype-#{url.split('.').last}" }
-                  = name
-                .col-6.text-end
-                  %p.mb-0= link_to 'Download', url, class: 'text-muted'
-                  %small Filename: #{re_get_file_name(url)}
+          .mt-4= render partial: 'attachments', locals: { task_attachment_files: }
           #attachment_files.mb-3
             %ul.list-unstyled= render partial: 'attachment_file_fields'
 
             .mt-3.text-center
               %hr.smoothly
               = link_to 'More file', '#add-more-file', data: { fields_html: render(partial: 'attachment_file_fields') }, class: 'btn text-primary', id: 'js-add-more-file'
-
 
     - if task.new_record? || task.in_processing?
       .col-md-12.mb-3.mt-3

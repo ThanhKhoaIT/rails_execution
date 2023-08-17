@@ -194,13 +194,12 @@ a {
     box-sizing: border-box;
     li {
       width: 100%;
-      .activitiy-time {
-        .fs13px {
-          font-size: 13px;
-        }
-      }
     }
   }
+}
+
+.fs13px {
+  font-size: 13px;
 }
 
 nav.execution-paging {
@@ -274,6 +273,8 @@ a#click2full {
 #all-tips {
   .tip {
     display: none;
+    font-size: 0.8em;
+    font-weight: 300;
   }
 }
 

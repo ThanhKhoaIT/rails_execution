@@ -1,0 +1,13 @@
+%h5.section-title.mb-3 Attachment files
+%ul.list-unstyled.mt-3
+  - task_attachment_files.each do |name, url|
+    %li.normal-text.row.g-0.align-items-center.py-1
+      .col-auto
+        %i.bi.fs-3.text-muted{ class: "bi-file-text bi-filetype-#{url.split('.').last}" }
+      .col.ps-2
+        %p.mb-0= name
+        %small.text-muted Filename: #{re_get_file_name(url)}
+      .col-auto.text-center
+        = link_to url, class: 'text-muted' do
+          %i.bi.bi-download.fs-5
+          %p.small.mb-0 Download

@@ -16,7 +16,6 @@
     = re_card_content do
       %h6.border-bottom.pb-2.mb-0
         = current_task.title
-        = render_task_labels(current_task)
         %span.float-end.fs-5.text-muted ##{current_task.id}
       %p.mt-3.description
         - if current_task.description.present?
@@ -24,8 +23,8 @@
           #description-html.normal-text
         - else
           %p.text-muted.text-center No description
+      = render partial: 'labels'
 
-    = render partial: 'attachment_files'
     = render partial: 'script_content'
     = render partial: 'comments', locals: { new_comment: @new_comment }
 
@@ -38,6 +37,7 @@
     = render partial: 'reviewers'
     = render partial: 'schedule'
     = render partial: 'status'
+    = render partial: 'attachment_files'
     = render partial: 'actions'
     = render partial: 'activities'
 

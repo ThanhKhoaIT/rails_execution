@@ -8,7 +8,6 @@ module RailsExecution
       paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
       processing_tasks = ::RailsExecution::Task.processing.preload(:owner, :labels)
       processing_tasks = ::RailsExecution::Tasks::FilterService.new(processing_tasks, params, current_owner&.id).call
-      @comments_count_by_task_id = ::RailsExecution::Comment.where(task: processing_tasks).group(:task_id).count
       @tasks = paging.call(processing_tasks)
     end
 
@@ -96,7 +95,7 @@ module RailsExecution
 
       update_data[:script] = params.dig(:task, :script) if @task.in_processing?
       @task.assign_reviewers(params.dig(:task, :task_review_ids).to_a)
-      @task.assign_labels(params[:task_label_ids].to_a)
+      @task.assign_labels(params[:task_label_ids].to_a) if params.key?(:task_label_ids)
       @task.syntax_status = ::RailsExecution::Services::SyntaxChecker.new(update_data[:script]).call ? 'good' : 'bad'
 
       if @task.update(update_data)
@@ -113,14 +112,14 @@ module RailsExecution
 
     def completed
       paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
-      completed_tasks = ::RailsExecution::Task.is_completed.includes(:owner, :comments, :labels)
+      completed_tasks = ::RailsExecution::Task.is_completed.preload(:owner, :labels)
       completed_tasks = ::RailsExecution::Tasks::FilterService.new(completed_tasks, params, current_owner&.id).call
       @tasks = paging.call(completed_tasks)
     end
 
     def closed
       paging = ::RailsExecution::Services::Paging.new(page: params[:page], per_page: params[:per_page])
-      closed_tasks = ::RailsExecution::Task.is_closed.includes(:owner, :comments, :labels)
+      closed_tasks = ::RailsExecution::Task.is_closed.preload(:owner, :labels)
       closed_tasks = ::RailsExecution::Tasks::FilterService.new(closed_tasks, params, current_owner&.id).call
       @tasks = paging.call(closed_tasks)
     end
@@ -257,5 +256,9 @@ module RailsExecution
     end
     helper_method :current_filtered_label
 
+    def comments_count_by_task
+      @comments_count_by_task ||= ::RailsExecution::Comment.where(task_id: @tasks.ids).group(:task_id).count
+    end
+    helper_method :comments_count_by_task
   end
 end

@@ -3,22 +3,26 @@
     %h5.section-title Logs
     %ul.list-unstyled#task-logs
       - task_logs.each do |task_log, created_at|
-        %li.row
-          .col
-            = re_get_file_name(task_log)
-            .mt-1= link_to 'Download', task_log, target: :_blank, class: 'text-muted click2download'
-          .col-3.text-end.activitiy-time
-            %span.fs13px.text-muted= created_at&.strftime('%Y/%m/%d')
-            %p.text-muted= created_at&.strftime('%H:%M')
+        %li.row.g-0.vetical-align-middle
+          .col.d-flex.align-items-center= re_get_file_name(task_log)
+          - if created_at
+            .col-auto.pe-3
+              .activitiy-time.text-muted.text-end
+                %span.fs13px= created_at.strftime('%Y/%m/%d')
+                %p.mb-0= created_at.strftime('%H:%M')
+          .col-auto.text-center
+            = link_to task_log, target: :_blank, class: 'text-muted click2download' do
+              %i.bi.bi-download.fs-5
+              %p.small.mb-0 Download
 
 = re_card_content id: 'activities-section' do
   %h5.section-title Activities
   %ul.list-unstyled
     - current_task.activities.descending.preload(:owner).each do |activitiy|
-      %li.row
+      %li.row.g-0.vetical-align-middle.mb-3
         .col
           = render_user_info(activitiy.owner, avatar_size: '20x20')
-          %p.normal-text.mt-1= activitiy.message
-        .col-3.text-end.activitiy-time
+          %p.mb-0.normal-text.mt-1= activitiy.message
+        .col-auto.text-end.activitiy-time
           %span.fs13px.text-muted= activitiy.created_at.strftime('%Y/%m/%d')
-          %p.text-muted= activitiy.created_at.strftime('%H:%M')
+          %p.mb-0.text-muted= activitiy.created_at.strftime('%H:%M')
