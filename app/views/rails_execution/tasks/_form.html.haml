@@ -31,7 +31,7 @@
           = f.datetime_local_field :scheduled_at, class: "form-control", placeholder: "Select Datetime"
           = f.select :repeat_mode, options_for_select(task.repeat_mode_select_options.invert, f.object.repeat_mode), {}, class: "form-control", disabled: !task.scheduled_at?
         - if RailsExecution.configuration.file_upload
-          .mt-4= render partial: 'attachments', locals: { task_attachment_files: }
+          .mt-4= render partial: 'attachments', locals: { task_attachment_files: task_attachment_files }
           #attachment_files.mb-3
             %ul.list-unstyled= render partial: 'attachment_file_fields'
 
