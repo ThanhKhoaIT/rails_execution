@@ -1,3 +1,3 @@
 - if task_attachment_files.any?
   = re_card_content do
-    = render partial: 'attachments', locals: { task_attachment_files: }
+    = render partial: 'attachments', locals: { task_attachment_files: task_attachment_files }
