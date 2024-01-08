@@ -39,9 +39,9 @@ module RailsExecution
       def setup
         task.with_lock do
           unless task.is_processing?
-            task.update(status: :processing)
             task.activities.create(owner: owner, message: 'Process the task with background job')
-            ::RailsExecution.configuration.task_background_executor.call(task.id)
+            jid = ::RailsExecution.configuration.task_background_executor.call(task.id)
+            task.update!(status: :processing, jid: jid.presence)
           end
         end
       end

@@ -44,7 +44,7 @@ module RailsExecution
           class #{class_name} < ::RailsExecution::Services::Executor
             def call
               task.with_lock do
-                stop!('Task is being executed by another process') if task.is_processing?
+                stop!('Task is being executed by another process') if task.is_processing? && task.jid.blank?
 
                 task.update!(status: :processing)
                 #{task.script}
