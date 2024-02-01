@@ -20,7 +20,9 @@ module RailsExecution
           setup_logger!
           execute_class!
           is_successful = true
-        rescue
+        rescue => e
+          Rails.logger.info('#' * 30)
+          Rails.logger.error(e)
           is_successful = false
         ensure
           restore_logger!
