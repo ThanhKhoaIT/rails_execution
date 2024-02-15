@@ -1,5 +1,4 @@
 class RailsExecution::Tasks::FilterService
-
   def initialize(tasks_query_object, params, current_user_id = nil)
     @tasks_query_object = tasks_query_object
     @params = params
@@ -12,7 +11,7 @@ class RailsExecution::Tasks::FilterService
     filter_by_keyword
     order_by_recently_updated
 
-    return @tasks_query_object.descending
+    @tasks_query_object.descending
   end
 
   private
@@ -38,12 +37,15 @@ class RailsExecution::Tasks::FilterService
   def filter_by_keyword
     return if params[:keyword].blank?
 
-    @tasks_query_object = @tasks_query_object.where("rails_execution_tasks.title LIKE ?", "%#{params[:keyword]}%")
+    @tasks_query_object = @tasks_query_object.where('rails_execution_tasks.title LIKE ?', "%#{params[:keyword]}%")
   end
 
   def order_by_recently_updated
-    sort_by = params[:recently_updated] == '1' ? { updated_at: :desc } : { updated_at: :asc }
+    sort_by = if params[:recently_updated].blank?
+                { updated_at: :desc }
+              else
+                params[:recently_updated] == '1' ? { updated_at: :desc } : { updated_at: :asc }
+              end
     @tasks_query_object = @tasks_query_object.order(sort_by)
   end
-
 end

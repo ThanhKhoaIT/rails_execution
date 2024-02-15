@@ -7,7 +7,7 @@
     Only my tasks
     = hidden_field_tag :my_task, params[:my_task]
   %button.btn.quick-filter-btn{ type: 'button', 'data-target': '#recently_updated' }
-    - if params[:recently_updated] == '1'
+    - if params[:recently_updated] == '1' || params[:recently_updated].blank?
       %i.bi.bi-sort-numeric-down-alt
     - else
       %i.bi.bi-sort-numeric-down
@@ -18,8 +18,10 @@
   $(document).ready(function() {
     $('.quick-filter-btn').on('click', function() {
       var isFilterActivatedInput = $($(this).attr('data-target'));
-      var isFilterActivated = isFilterActivatedInput.val() == '1' ? '0' : '1';
-      isFilterActivatedInput.val(isFilterActivated)
+      var isFilterActivated = isFilterActivatedInput.val();
+      isFilterActivated = isFilterActivated == '' ? '1' : isFilterActivated; // Default sort
+      isFilterActivated = isFilterActivated == '1' ? '0' : '1';
+      isFilterActivatedInput.val(isFilterActivated);
       $('#filter-form').submit();
     })
   })

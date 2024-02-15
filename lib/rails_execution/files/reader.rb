@@ -2,7 +2,7 @@
 
 require 'net/http'
 require 'tempfile'
-require 'open-uri'
+require 'uri'
 
 module RailsExecution
   module Files
@@ -33,7 +33,7 @@ module RailsExecution
       attr_reader :task
 
       def save_to_tempfile(file_name, url)
-        file = URI.open(url)
+        file = open(url)
         return file if file.is_a?(Tempfile)
 
         raise "Unsupported the Filetype #{file.class.name}" unless file.is_a?(StringIO)
