@@ -187,6 +187,12 @@ module RailsExecution
       redirect_to(action: :show)
     end
 
+    def auto_suggestions
+      return render json: [] if RailsExecution.configuration.auto_suggestions.empty?
+
+      render json: RailsExecution::AutoSuggestionsService.new.call
+    end
+
     private
 
     def current_task

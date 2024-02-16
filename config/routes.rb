@@ -20,6 +20,7 @@ RailsExecution::Engine.routes.draw do
     collection do
       get :completed
       get :closed
+      get :auto_suggestions
     end
 
     resources :comments, only: [:create, :update, :destroy]
