@@ -41,6 +41,7 @@ module RailsExecution
     attr_accessor :task_background
     attr_accessor :task_background_executor # lambda
     attr_accessor :acceptable_file_types
+    attr_accessor :auto_suggestions # On/Off the code editor auto suggestion
 
     # Logger
     attr_accessor :logging # lambda
@@ -60,6 +61,10 @@ module RailsExecution
       self.owner_name_method = :name
       self.owner_avatar = ->(_) { nil }
 
+      self.auto_suggestions = [
+        'app/models',
+        'app/jobs',
+      ]
       self.file_upload = false
       self.acceptable_file_types = DEFAULT_FILE_TYPES
       self.file_uploader = ::RailsExecution::Files::Uploader

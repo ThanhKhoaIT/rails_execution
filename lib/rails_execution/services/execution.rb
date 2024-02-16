@@ -80,6 +80,8 @@ module RailsExecution
 
       def storing_log_file!
         ::RailsExecution.configuration.logging.call(@tempfile, task)
+      rescue => e
+        ::Rails.logger.error(e)
       end
 
       def restore_logger!

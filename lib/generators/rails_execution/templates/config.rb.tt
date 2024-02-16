@@ -2,6 +2,11 @@ RailsExecution.configuration do |config|
 
   config.solo_mode = true # Without reviewing process
 
+  config.auto_suggestions = [
+    'app/models',
+    'app/jobs',
+  ]
+
   # Owner display
   # config.owner_model = 'User'
   # config.owner_method = :current_user

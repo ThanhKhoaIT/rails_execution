@@ -13,14 +13,78 @@
 
 - if task.new_record? || task.in_processing?
   :javascript
-    var editor = ace.edit("script-editor", { printMarginColumn: false });
+    var editor = ace.edit("script-editor", { printMarginColumn: false, enableSnippets: true });
     var RubyMode = ace.require("ace/mode/ruby").Mode;
+    var langTools = ace.require("ace/ext/language_tools");
+    var suggestionData = [];
+    var autoCompletionOptions = [];
+
+    function loadAutoCompletionOptions() {
+      $.ajax({
+        url: "#{auto_suggestions_tasks_path}",
+        type: 'GET',
+        success: function(data) {
+          autoCompletionOptions = data;
+        }
+      });
+    }
+
     editor.setTheme("ace/theme/solarized_dark");
     editor.session.setMode(new RubyMode());
     editor.renderer.setPadding(15);
     editor.renderer.setShowPrintMargin(false);
     editor.getSession().on("change", function () {
       $("#main-script").val(editor.getValue());
+    });
+    editor.setOptions({
+      enableBasicAutocompletion: true,
+      enableLiveAutocompletion: true,
+    });
+
+    var stepLineCompleter = {
+      getCompletions: function(editor, session, pos, prefix, callback) {
+        var completions = [];
+        if (suggestionData) {
+          suggestionData.forEach(function(w) {
+            completions.push({ value: w });
+          });
+          callback(null, completions);
+        }
+      }
+    }
+    langTools.setCompleters([stepLineCompleter]);
+    langTools.addCompleter(stepLineCompleter);
+    loadAutoCompletionOptions();
+
+    var snippetManager = ace.require("ace/snippets").snippetManager;
+    var railsSnippets = [
+      { content: "map { |${1:item}| ${0:# code} }", name: "map", tabTrigger: "map" },
+      { content: "select { |${1:item}| ${0:# code} }", name: "select", tabTrigger: "select" },
+      { content: "each { |${1:item}| ${0:# code} }", name: "each", tabTrigger: "each" },
+      { content: "find_each(batch_size: ${1:1000}) do |${2:record}|\n\t${0:# code}\nend", name: "find_each", tabTrigger: "find_each" },
+      { content: "pluck(:${1:attribute})", name: "pluck", tabTrigger: "pluck" },
+      { content: "find(${1:id})", name: "find", tabTrigger: "find" },
+      { content: "find_or_initialize_by(${1:attribute}: ${2:value})", name: "find_or_initialize_by", tabTrigger: "find_or_initialize_by" },
+      { content: "update(${1:id}, ${2:attributes})", name: "update", tabTrigger: "update" },
+      { content: "update_all(${1:attributes})", name: "update_all", tabTrigger: "update_all" },
+      { content: "where(${1:conditions})", name: "where", tabTrigger: "where" },
+      { content: "where.not(${1:conditions})", name: "where.not", tabTrigger: "where.not" },
+      { content: "joins(:${1:association})", name: "joins", tabTrigger: "joins" },
+      { content: "preload(:${1:association})", name: "preload", tabTrigger: "preload" },
+      { content: "includes(:${1:association})", name: "includes", tabTrigger: "includes" },
+    ];
+    snippetManager.register(railsSnippets);
+
+    editor.getSession().on('change', function() {
+      var cursorPosition = editor.getCursorPosition();
+      var wordRange = editor.session.getWordRange(cursorPosition.row, cursorPosition.column);
+      var currentWord = editor.session.getTextRange(wordRange);
+
+      if (currentWord.length && /^[A-Z]/.test(currentWord)) {
+        suggestionData = autoCompletionOptions;
+      } else {
+        suggestionData = [];
+      }
     });
 
     $('#click2full').click(function() {
@@ -32,4 +96,3 @@
       AddMoreFile();
       return false;
     });
-

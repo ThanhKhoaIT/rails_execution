@@ -1,3 +1,4 @@
+//= require_tree ./ace.1.32.5
 //= require_tree .
 
 document.addEventListener("DOMContentLoaded", function() {
