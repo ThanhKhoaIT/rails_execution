@@ -42,7 +42,7 @@ class RailsExecution::Tasks::FilterService
   end
 
   def order_by_recently_updated
-    sort_by = params[:recently_updated] == '1' ? { updated_at: :desc } : { updated_at: :asc }
+    sort_by = params[:recently_updated] == 'asc' ? { updated_at: :asc } : { updated_at: :desc }
     @tasks_query_object = @tasks_query_object.order(sort_by)
   end
 
